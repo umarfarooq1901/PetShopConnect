@@ -116,6 +116,11 @@ const userDeleteController = async(req, res)=>{
     }
 }
 
+module.exports = {
+  userSignupController,
+  userLoginController,
+  userDeleteController,
+};
 
 
 module.exports = { userSignupController, userLoginController, userDeleteController };
