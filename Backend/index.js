@@ -1,4 +1,5 @@
 const express = require('express');
+const cookieParser = require('cookie-parser')
 const connectDb = require('./config/db')
 const {config} = require('dotenv');
 config({path: './.env'});
@@ -13,8 +14,9 @@ connectDb();
 // Initialize the app
 const app = express();
 
-// Middleware to handle JSON (if needed)
+// Middleware to handle JSON, cookieParser (if needed)
 app.use(express.json());
+app.use(cookieParser());
 
 
 app.get('/', ((req, res)=>{res.send('Hello from the PetShop Server!')}));

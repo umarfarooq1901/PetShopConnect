@@ -31,10 +31,8 @@ const UserSchema = new Schema({
   petshop:{
     type: Schema.Types.ObjectId,
     ref: 'petShopModel',
-  }
-  
-
-
+    
+  },
 
 });
 
