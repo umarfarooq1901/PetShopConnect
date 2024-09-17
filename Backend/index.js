@@ -3,7 +3,9 @@ const connectDb = require('./config/db')
 const {config} = require('dotenv');
 config({path: './.env'});
 
-const port = process.env.PORT;
+
+
+const port = process.env.PORT || 3000;   // Fallback to port 3000 if not defined;
 
 // dataBase Connection call
 connectDb();
@@ -16,6 +18,11 @@ app.use(express.json());
 
 
 app.get('/', ((req, res)=>{res.send('Hello from the PetShop Server!')}));
+
+// User Routes
+const userRoute = require('./routes/user/userRoute');
+app.use('/user',userRoute);
+
 
 
 // (Listening on port)
