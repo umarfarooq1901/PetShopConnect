@@ -10,7 +10,7 @@ const petShopSchema = new Schema({
 
   ownerName: {
     type: Schema.Types.ObjectId,
-    ref: "user",
+    ref: "User",
     required: true,
   },
 
