@@ -9,11 +9,11 @@ const userAuthentication = async(req, res, next)=>{
             return res.status(401).json({message: 'Unauthorized Access!'})
         }
         const secretKey = process.env.SECRET_KEY;
-                    jwt.verify(authToken, secretKey, (error, decode)=>{
+                    jwt.verify(authToken, secretKey, (error, decoded)=>{
                         if(error){
                             return res.status(403).json({message: 'Access Denied!'});
                         }
-                        req.user = decode._id;
+                        req.user = decoded; // Store entire decoded token object, not just _id
                         return next();
                     })
         
