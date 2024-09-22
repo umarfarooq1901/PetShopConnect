@@ -2,11 +2,12 @@ const express = require('express');
 const router = express.Router();
 const multerUpload = require('../../middlewares/multer/multer');
 const petShopAuth = require('../../middlewares/Authentication/petShopAuth');
-const {petShopRegController, petShopLoginController, petShopDeleteController} = require('../../controllers/petShopController')
+const {petShopRegController, petShopLoginController, petShopDeleteController, petShopUpdateController} = require('../../controllers/petShopController')
 
 router.post('/register',multerUpload, petShopRegController);
 router.post('/login', petShopLoginController);
-router.delete('/delete', petShopAuth, petShopDeleteController)
+router.delete('/delete', petShopAuth, petShopDeleteController);
+router.put('/updateDetails', petShopAuth, petShopUpdateController);
 
 
 module.exports = router

@@ -148,6 +148,42 @@ const petShopLoginController = async(req,res)=>{
         }
     }
 
-module.exports = {petShopRegController, petShopLoginController, petShopDeleteController};
+
+      // PetShop Edit Controller
+
+      const petShopUpdateController = async(req, res)=>{
+        try {
+            const {petshopId} = req.petshop;
+
+            const {shopName, contact, shopAddress, bankDetails} = req.body;
+
+            // check if the petshop exists
+            const findPetshop = await PetShop.findById(petshopId);
+
+            if(!findPetshop){
+                return res.status(404).json({message: 'Petshop Not Found!'})
+            }
+             
+            const updatePetshop = await PetShop.findByIdAndUpdate(petshopId,{
+                // FallBack Logic
+                shopName: shopName || findPetshop.shopName,
+                contact: contact || findPetshop.contact,
+                shopAddress: shopAddress || findPetshop.shopAddress,
+                bankDetails: bankDetails  || findPetshop.bankDetails
+            },{new: true, runValidators: true}); // Return the updated document and validate fields
+
+
+                if(!updatePetshop){
+                    return res.status(500).json({ message: 'Error while updating petshop details!' });
+                }
+                return res.status(200).json({ message: 'Petshop Details Updated Successfully!' });
+            
+        } catch (error) {
+            console.error('Server Error while Updating the details:', error);
+            res.status(500).json({ message: 'Internal Server Error!' });
+        }
+      }
+
+module.exports = {petShopRegController, petShopLoginController, petShopDeleteController, petShopUpdateController};
 
 
