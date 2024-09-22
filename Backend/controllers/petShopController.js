@@ -17,9 +17,9 @@ cloudinary.config({
 const petShopRegController = async(req, res)=>{
     try {
         const { shopName, ownerId, contact, shopAddress, bankDetails} = req.body;
-        console.log(req.body)
+        // console.log(req.body)
         const aadharCard = req.file?.path; // Ensure file upload was successful
-        console.log(req.file)
+        // console.log(req.file)
             // Input validation
             if (!shopName || !ownerId || !contact || !shopAddress || !bankDetails || !aadharCard) {
                 return res.status(400).json({ message: "All required fields must be filled!" });
@@ -59,6 +59,10 @@ const petShopRegController = async(req, res)=>{
             if(!newPetShop){
                 return res.status(202).json({message: 'Error occurred while creating the PetShop!'});
             }
+
+             // After successful registration, update the user's role to "petshop"
+             user.role = 'petshop';
+             await user.save();  // Save the updated user
               // Send response to the user
             return res.status(200).json({message: 'Thanks for registering with us. Your PetShop has been created successfully! An admin will verify your details shortly.'})
             
@@ -121,6 +125,29 @@ const petShopLoginController = async(req,res)=>{
     }
 }
 
-module.exports = {petShopRegController, petShopLoginController};
+
+
+    // PetShop Delete Controller
+
+    const petShopDeleteController = async(req, res)=>{
+        try {
+
+            const { petshopId } = req.petshop; // Extract petshopId from the decoded token
+
+            // Find and delete the petshop
+            const petshop = await PetShop.findByIdAndDelete(petshopId);
+            if(!petshop){
+                return res.status(404).json({message: 'Petshop Not Found!'});
+            }
+
+            return res.status(200).json({message: 'Petshop Deleted Successfully!'});
+            
+        }catch (error) {
+            console.error('Error while deleting the pet shop:', error);
+            res.status(500).json({ message: 'Internal Server Error!' });
+        }
+    }
+
+module.exports = {petShopRegController, petShopLoginController, petShopDeleteController};
 
 

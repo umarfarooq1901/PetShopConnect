@@ -93,7 +93,7 @@ const userLoginController = async (req, res) => {
                
         });
 
-        return res.status(200).json({message: 'Logged in Successfully!'});
+        return res.status(200).json({message: 'Logged in Successfully!', createToken});
 
     } catch (error) {
         console.log('Error while logging in:', error);

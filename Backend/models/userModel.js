@@ -17,7 +17,7 @@ const UserSchema = new Schema({
   },
   role: {
     type: String,
-    enum: ['customer', 'petShop', 'admin'], 
+    enum: ['customer', 'petshop', 'admin'], 
     default: 'customer'
   },
   contact: {

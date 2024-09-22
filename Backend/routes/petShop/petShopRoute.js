@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const multerUpload = require('../../middlewares/multer/multer');
-const {petShopRegController, petShopLoginController} = require('../../controllers/petShopController')
+const petShopAuth = require('../../middlewares/Authentication/petShopAuth');
+const {petShopRegController, petShopLoginController, petShopDeleteController} = require('../../controllers/petShopController')
 
 router.post('/register',multerUpload, petShopRegController);
 router.post('/login', petShopLoginController);
+router.delete('/delete', petShopAuth, petShopDeleteController)
 
 
 module.exports = router
