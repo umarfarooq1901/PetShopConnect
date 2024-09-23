@@ -1,77 +1,45 @@
-<<<<<<< HEAD
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const ProductSchema = new Schema({
+const productSchema = new Schema({
   productName: {
     type: String,
     required: true,
   },
-
-  petShop: {
-    type: mongoose.Schema.type,
-    ref: "petShop",
+  productDescription: {
+    type: String,
     required: true,
   },
-
-  price: {
+  productPrice: {
     type: Number,
     required: true,
-    min: 0,
   },
-
+  productQuantity: {
+    type: Number,
+    required: true,
+  },
   category: {
-    type: String,
-    enum: ["Food", "Toys", "Accessories", "Vaccination", "Grooming", "Mating"],
+    type: String, // Example: 'Food', 'Accessories', 'Grooming', etc.
     required: true,
   },
-
-  description: {
-    type: String,
-    trim: true,
-  },
-
-  stockQuantity: {
-    type: Number,
-    required: true,
-    min: 0,
-  },
-
-  animalType: {
-    type: String,
-    enum: ["Dog", "Cat"],
+  subCategory: {
+    type: String, // Example: 'Dog Food', 'Cat Toys', 'Shampoo', etc.
     required: true,
   },
-
-  imageUrl: String,
-
+  petShop: {
+    type: Schema.Types.ObjectId,
+    ref: "PetShop", // Reference to the PetShop model
+    required: true,
+  },
+  images: [
+    {
+      type: String, // URLs for the product images
+    },
+  ],
   createdAt: {
-    type: "Date",
+    type: Date,
     default: Date.now,
   },
 });
 
-module.exports = mongoose.model("Product", ProductSchema);
-=======
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-
-const productSchema = new Schema({
-    productName: {type: String, required: true},
-    productDescription: {type: String, required: true},
-    price: {type: Number, required: true},
-    stock: {type: Number, required: true},
-    petShop: {
-        type: Schema.Types.ObjectId,
-        ref: 'PetShop',
-        required: true
-
-    },
-    imageUrl: {type: String, required: true},
-    createdAt: {
-        type: Date, 
-        default: Date.now}
-});
-
-module.exports = mongoose.model('Product', productSchema);
->>>>>>> 72cf5ea740a8b58c43a0a230364a94da69d99d75
+module.exports = mongoose.model("Product", productSchema);
