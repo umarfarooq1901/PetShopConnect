@@ -5,8 +5,7 @@ const UserSchema = new Schema({
   username: { 
     type: String, 
     required: true 
-    },
-
+  },
   email: {
     type: String,
     required: true,
@@ -16,27 +15,31 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
- 
-  role:{
+  role: {
     type: String,
-    enum:['customer', 'petShop', 'admin'], default: 'customer'
-  }, 
-  contact:{
-    type: String,
-    required:true
+    enum: ['customer', 'petshop', 'admin'], 
+    default: 'customer'
   },
-  address:{
+  contact: {
+    type: String,
+    required: true
+  },
+  address: {
     type: String,
   },
-  petshop:{
+  petshop: {
     type: Schema.Types.ObjectId,
-    ref: 'petShopModel',
+    ref: 'PetShop', // Refers to the PetShop model
+  },
+  verificationStatus: {
+    type: String,
+    enum: ['pending', 'approved', 'rejected'],
+    default: 'pending' // Pet shop accounts will be 'pending' initially
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
   }
-  
-
-
-
 });
-
 
 module.exports = mongoose.model('User', UserSchema);
