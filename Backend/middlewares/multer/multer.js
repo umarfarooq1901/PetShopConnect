@@ -17,14 +17,14 @@ const storage = multer.diskStorage({
     }
 });
 
-// const storage2 = multer.diskStorage({
-//     destination: (req, file, cb) => {
-//         cb(null, './uploads/products'); // Store the files in this directory
-//     },
-//     filename: (req, file, cb) => {
-//         cb(null, Date.now() + path.extname(file.originalname)); // Rename the file to avoid conflicts
-//     }
-// });
+const productStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, './uploads/products'); // Store the files in this directory
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname)); // Rename the file to avoid conflicts
+    }
+});
 
 // Only accept image files for the Aadhar card (jpg, png)
 const fileFilter = (req, file, cb) => {
@@ -36,23 +36,21 @@ const fileFilter = (req, file, cb) => {
 };
 
 // Set up multer middleware with storage and file filtering
-const multerUpload = multer({
+const multerAadharUpload = multer({
     storage: storage,
     fileFilter: fileFilter,
     limits: { fileSize: 1024 * 1024 * 5 } // 5MB file size limit
-});
+}).single('aadharCard');
 
-// const multerArrayUpload = multer({
-//         storage: storage2,
-//         fileFilter:fileFilter,
-//         limits: { fileSize: 1024 * 1024 * 5 } // 5MB file size limit
-// });
-
-const multer1 =  multerUpload.single('aadharCard');
-// const multer2 =  multerArrayUpload.array('products');
+const multerProductUpload = multer({
+        storage: productStorage,
+        fileFilter:fileFilter,
+        limits: { fileSize: 1024 * 1024 * 5 } // 5MB file size limit
+}).array('productImages', 5); //specify the max count
 
 
-module.exports = {multer1};
+
+module.exports = {multerAadharUpload, multerProductUpload};
 
 
 
