@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 const {config} = require('dotenv');
-config({path: './.env'})
-const dbPort = process.env.DB_PORT;
+config({path:'./.env'})
+const dbUrl = process.env.DB_URL;
 const connectDb = async()=>{
     try {
-        await mongoose.connect(`${dbPort}/petShop`);
+        await mongoose.connect(`${dbUrl}/petShop`);
         console.log('Db Connected successfully!');
         
         
