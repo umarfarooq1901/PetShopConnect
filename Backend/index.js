@@ -28,12 +28,13 @@ app.use('/user',userRoute);
 
 
 // petshop routes
+// const petShopRoute = require('./routes/petShop/petShopRoute');
 const petShopRoute = require('./routes/petShop/petShopRoute');
 app.use('/petshop', petShopRoute);
 
 // products route
-const productsRoute = require('./routes/petShop/products/productRoute');
-app.use('/petshop', productsRoute);
+// const productRoute = require('./routes/petShop/products/productRoute')
+// app.use('/petshop', productRoute);
 
 
 
