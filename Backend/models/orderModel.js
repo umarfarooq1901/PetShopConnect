@@ -1,46 +1,72 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-
 const orderSchema = new Schema({
     customer: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-      required: true
+        type: Schema.Types.ObjectId,
+        ref: "User", // Reference to the User model (customer who placed the order)
+        required: true,
     },
     petShop: {
-      type: Schema.Types.ObjectId,
-      ref: 'PetShop',
-      required: true
+        type: Schema.Types.ObjectId,
+        ref: "PetShop", // Reference to the PetShop model (where the order was placed)
+        required: true,
     },
-    products: [{
-      product: { type: Schema.Types.ObjectId, ref: 'Product' },
-      quantity: { type: Number, required: true }
-    }],
-    services: [{
-      service: { type: Schema.Types.ObjectId, ref: 'Service' },
-      type: {
-        type: String,
-        enum: ['home', 'shop'], // Home service or shop visit
-        required: true
+    products: [
+        {
+          product: {
+            type: Schema.Types.ObjectId,
+            ref: "Product", // Reference to the Product model
+            required: true,
+          },
+          quantity: {
+            type: Number,
+            required: true,
+            min: 1,
+          },
+          price: {
+            type: Number,
+            required: true,
+          },
+        },
+      ],
+
+      
+      totalAmount: {
+        type: Number,
+        required: true,
       },
-      appointmentDate: { type: Date } // Optional: if it’s a scheduled service
-    }],
-    totalPrice: { type: Number, required: true },
-    deliveryAddress: { type: String, required: true },
-    paymentStatus: {
-      type: String,
-      enum: ['pending', 'paid', 'failed'],
-      default: 'pending'
-    },
-    status: {
-      type: String,
-      enum: ['processing', 'shipped', 'delivered', 'completed', 'cancelled'],
-      default: 'processing'
-    },
-    createdAt: { type: Date, default: Date.now }
-  });
-  
-  module.exports = mongoose.model('Order', orderSchema);
-  
-  
+     
+      paymentStatus: {
+        type: String,
+        enum: ['pending', 'completed', 'failed', 'refunded'],
+        default: 'pending',
+      },
+
+      orderStatus: {
+        type: String,
+        enum: ['pending', 'processed', 'shipped', 'delivered', 'cancelled'],     
+        default: 'pending',
+      },
+      shippingAddress: {
+        street: { type: String, required: true },
+        city: { type: String, required: true },
+        pinCode: { type: String, required: true },
+        country: { type: String, required: true },
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now,
+      },
+      updatedAt: {
+        type: Date,
+        default: Date.now,
+      },
+});
+
+orderSchema.pre('save', function (next) {    //.pre-save indicates that this middelware should run before teh "save" opearton occurs.
+    this.updatedAt = Date.now();            //this refers to the current order document that si about to be saved.
+    next();                                //next: This is a callback function that you must call when your middleware function is done.
+});
+
+module.exports = mongoose.model("Order", orderSchema);
