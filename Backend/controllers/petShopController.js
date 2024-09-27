@@ -79,7 +79,7 @@ const petShopRegController = async(req, res)=>{
 const petShopLoginController = async(req,res)=>{
     try {
         const secretKey = process.env.SECRET_KEY;
-        const {email, password} = req.body;
+        const {email, password} = req.body; 
         // validate inputs
 
         if(!email || !password){

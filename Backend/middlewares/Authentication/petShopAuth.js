@@ -5,6 +5,7 @@ config({ path: './.env' });
 const petShopAuth = async (req, res, next) => {
     try {
         const { petshopToken } = req.cookies;
+        
         if (!petshopToken) {
             return res.status(401).json({ message: 'Unauthorized Access!' });
         }
@@ -12,6 +13,7 @@ const petShopAuth = async (req, res, next) => {
         const secretKey = process.env.SECRET_KEY;
 
         // Verify the token
+        
         jwt.verify(petshopToken, secretKey, (error, decoded) => {
             if (error) {
                 return res.status(403).json({ message: 'Access Denied' });
@@ -28,3 +30,8 @@ const petShopAuth = async (req, res, next) => {
 }
 
 module.exports = petShopAuth;
+
+
+
+
+
