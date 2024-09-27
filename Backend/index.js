@@ -36,6 +36,9 @@ app.use('/petshop', petShopRoute);
 const productRoute = require('./routes/petShop/products/productRoute')
 app.use('/petshop', productRoute);
 
+//service route
+const serviceRoute = require ('./routes/petShop/services/serviceRoute')
+app.use('/petshop' , serviceRoute);
 
 
 // (Listening on port)
