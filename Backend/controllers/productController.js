@@ -79,41 +79,42 @@ const addProductController = async (req, res) => {
     }
 };
 
-
     // Delete the products by petshop
 
     const deleteProductController = async(req, res)=>{
-            try {
-                const {petshopId} = req.petshop;
-                const {_id} = req.params;
+        try {
+            const {petshopId} = req.petshop;
+            const {_id} = req.params;
 
-               const checkPetShop = await PetShop.findById(petshopId);
-               if(!checkPetShop){
-                return res.status(404).json({message: 'Petshop not found, You need to register first!'})
-               }
+           const checkPetShop = await PetShop.findById(petshopId);
+           if(!checkPetShop){
+            return res.status(404).json({message: 'Petshop not found, You need to register first!'})
+           }
 
-                const deleteProduct = await Product.findByIdAndDelete(_id);
-                if(!deleteProduct){
-                   
-                    return res.status(400).json({message: 'Some error while deleting the product'});
-                }
-
-                    const index = checkPetShop.products.findIndex((product)=> product._id.toString() === _id)
-
-                    if(index > -1){
-
-                         checkPetShop.products.splice(index , 1)
-                             await checkPetShop.save();
-                            //  await cloudinary.uploader.destroy()
-                             return res.status(200).json({message: 'Product Deleted Succusfully!'})
-                    }             
-                
-            } catch (error) {
-                console.log('Error while deleting the product', error);
-                res.status(500).json({message: 'Internal server error!'})
-                
+            const deleteProduct = await Product.findByIdAndDelete(_id);
+            if(!deleteProduct){
+               
+                return res.status(400).json({message: 'Some error while deleting the product'});
             }
-    }
+
+                const index = checkPetShop.products.findIndex((product)=> product._id.toString() === _id)
+
+                if(index > -1){
+
+                     checkPetShop.products.splice(index , 1)
+                         await checkPetShop.save();
+                        //  await cloudinary.uploader.destroy()
+                         return res.status(200).json({message: 'Product Deleted Succusfully!'})
+                }             
+            
+        } catch (error) {
+            console.log('Error while deleting the product', error);
+            res.status(500).json({message: 'Internal server error!'})
+            
+        }
+}
+
+
 
 // Exporting the controller
 module.exports = {addProductController, deleteProductController};
