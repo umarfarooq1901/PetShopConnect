@@ -35,14 +35,18 @@ const addProductController = async (req, res) => {
         // Upload product images to Cloudinary
         const folderPath = 'petshop-folder/petshop-products';
         const uploadedImages = [];
+        // const ImagePublicId = [];
 
         for (const file of productImages) {
             const result = await cloudinary.uploader.upload(file.path, {
                 folder: folderPath
+
             });
 
             if (result) {
                 uploadedImages.push(result.secure_url); // Store the URL of the uploaded image
+                // ImagePublicId.push(result.public_id);
+
             } else {
                 return res.status(500).json({ message: 'Error while uploading one of the product images!' });
             }
@@ -75,5 +79,41 @@ const addProductController = async (req, res) => {
     }
 };
 
+
+    // Delete the products by petshop
+
+    const deleteProductController = async(req, res)=>{
+            try {
+                const {petshopId} = req.petshop;
+                const {_id} = req.params;
+
+               const checkPetShop = await PetShop.findById(petshopId);
+               if(!checkPetShop){
+                return res.status(404).json({message: 'Petshop not found, You need to register first!'})
+               }
+
+                const deleteProduct = await Product.findByIdAndDelete(_id);
+                if(!deleteProduct){
+                   
+                    return res.status(400).json({message: 'Some error while deleting the product'});
+                }
+
+                    const index = checkPetShop.products.findIndex((product)=> product._id.toString() === _id)
+
+                    if(index > -1){
+
+                         checkPetShop.products.splice(index , 1)
+                             await checkPetShop.save();
+                            //  await cloudinary.uploader.destroy()
+                             return res.status(200).json({message: 'Product Deleted Succusfully!'})
+                    }             
+                
+            } catch (error) {
+                console.log('Error while deleting the product', error);
+                res.status(500).json({message: 'Internal server error!'})
+                
+            }
+    }
+
 // Exporting the controller
-module.exports = addProductController;
+module.exports = {addProductController, deleteProductController};
