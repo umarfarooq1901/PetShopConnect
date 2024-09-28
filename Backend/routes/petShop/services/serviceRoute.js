@@ -6,6 +6,7 @@ const {
   deleteServiceController,
   updateServiceController,
   getAllServicesController,
+  getSingleServiceController
 } = require("../../../controllers/serviceController");
 
 router.post("/addService", petShopAuth, addServiceController);
@@ -16,5 +17,6 @@ router.delete(
 );
 router.put("/updateService/:serviceId", petShopAuth, updateServiceController);
 router.get("/getallservices", petShopAuth, getAllServicesController);
+router.get("/getsingleservice/:serviceId", petShopAuth, getSingleServiceController);
 
 module.exports = router;
