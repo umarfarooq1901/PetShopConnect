@@ -64,7 +64,7 @@ const petShopRegController = async(req, res)=>{
              user.role = 'petshop';
              await user.save();  // Save the updated user
               // Send response to the user
-            return res.status(200).json({message: 'Thanks for registering with us. Your PetShop has been created successfully! An admin will verify your details shortly.'})
+            return res.status(201).json({message: 'Thanks for registering with us. Your PetShop has been created successfully! An admin will verify your details shortly.'})
             
     } catch (error) {
         console.error('Error registering pet shop:', error);

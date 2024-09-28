@@ -33,8 +33,8 @@ const petShopRoute = require('./routes/petShop/petShopRoute');
 app.use('/petshop', petShopRoute);
 
 // products route
-// const productRoute = require('./routes/petShop/products/productRoute')
-// app.use('/petshop', productRoute);
+const productRoute = require('./routes/petShop/products/productRoute')
+app.use('/petshop', productRoute);
 
 //service route
 const serviceRoute = require ('./routes/petShop/services/serviceRoute')

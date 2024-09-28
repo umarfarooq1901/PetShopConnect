@@ -6,7 +6,7 @@ const userAuthentication = async(req, res, next)=>{
     try {
         const {authToken} = req.cookies;
         if(!authToken){
-            return res.status(401).json({message: 'Unauthorized Access!'})
+            return res.status(401).json({message: 'Unauthorized Access!'});
         }
         const secretKey = process.env.SECRET_KEY;
                     jwt.verify(authToken, secretKey, (error, decoded)=>{
