@@ -45,6 +45,12 @@ const deleteServiceController = async (req, res) => {
     const { serviceId } = req.params;
     const { petshopId } = req.petshop;
 
+    const findPetShop = await PetShop.findById(petshopId);
+    if(!findPetShop){
+      return res.status(404).json({message: 'Petshop not registered with us!'})
+    }
+
+
     const service = await Service.findByIdAndDelete(serviceId);
 
     if (!service) {
@@ -75,6 +81,12 @@ const updateServiceController = async (req, res) => {
       return res
         .status(404)
         .json({ message: "Unauthorized to delete this service!" });
+    }
+
+    
+    const findService = await Service.findById(serviceId);
+    if(!findService){
+      return res.status(404).json({message: 'Servive not found'})
     }
     const updateService = await Service.findByIdAndUpdate(
       serviceId,
@@ -122,9 +134,38 @@ const getAllServicesController = async (req, res) => {
   }
 };
 
+// Get One Service Controller:
+
+const getOneServiceController = async (req, res) => {
+  try {
+    const { serviceId } = req.params; // The ID of the service from the request parameters
+    const { petshopId } = req.petshop; // The ID of the pet shop from the request object
+
+    // Find the service by its ID and ensure it belongs to the correct pet shop
+    const service = await Service.findOne({
+      _id: serviceId,
+      petShop: petshopId,
+    });
+
+    if (!service) {
+      return res
+        .status(404)
+        .json({ message: "Service not Found or unauthorised Acess!" });
+    }
+
+    return res
+      .status(200)
+      .json({ message: "Service retrived successfully", service });
+  } catch (error) {
+    console.error("Error retrieving service:", error);
+    return res.status(500).json({ message: "Internal Server Error!" });
+  }
+};
+
 module.exports = {
   addServiceController,
   deleteServiceController,
   updateServiceController,
   getAllServicesController,
+  getOneServiceController,
 };

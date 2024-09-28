@@ -31,6 +31,21 @@ const orderSchema = new Schema({
     },
   ],
 
+  services: [
+    {
+      service: {
+        type: Schema.Types.ObjectId,
+        ref: "Service", // Reference to the service model
+        required: true,
+      },
+
+      price: {
+        type: Number,
+        required: true,
+      },
+    },
+  ],
+
   totalAmount: {
     type: Number,
     required: true,
