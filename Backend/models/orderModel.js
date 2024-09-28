@@ -31,6 +31,20 @@ const orderSchema = new Schema({
     },
   ],
 
+  services: [
+    {
+      service: {
+        type: Schema.Types.ObjectId,
+        ref: "Service", // Reference to the service model
+        required: true,
+      },
+      price: {
+        type: Number,
+        required: true,
+      },
+    },
+  ],
+
   totalAmount: {
     type: Number,
     required: true,
@@ -63,10 +77,10 @@ const orderSchema = new Schema({
   },
 });
 
-orderSchema.pre("save", function (next) {
-  //.pre-save indicates that this middelware should run before teh "save" opearton occurs.
-  this.updatedAt = Date.now(); //this refers to the current order document that si about to be saved.
-  next(); //next: This is a callback function that you must call when your middleware function is done.
-});
+// orderSchema.pre("save", function (next) {
+//   //.pre-save indicates that this middelware should run before teh "save" opearton occurs.
+//   this.updatedAt = Date.now(); //this refers to the current order document that si about to be saved.
+//   next(); //next: This is a callback function that you must call when your middleware function is done.
+// });
 
 module.exports = mongoose.model("Order", orderSchema);
