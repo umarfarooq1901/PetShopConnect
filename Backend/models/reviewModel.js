@@ -2,31 +2,35 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const reviewSchema = new Schema({
-  customer: {
-    type: Schema.Types.ObjectId,
-    ref: "User", // Reference to the User model (customer who wrote the review)
-    required: true,
-  },
-  petShop: {
-    type: Schema.Types.ObjectId,
-    ref: "PetShop", // Reference to the PetShop model (the shop being reviewed)
-    required: true,
-  },
-  product: {
-    type: Schema.Types.ObjectId,
-    ref: "Product", // Reference to the Product model (the product being reviewed, if applicable)
-  },
-  order: {
-    type: Schema.Types.ObjectId,
-    ref: "Order", // Reference to the Order model (the order related to the review)
-    required: true,
-  },
-
-  comment: {
-    type: String,
-    required: true,
-    trim: true,
-  },
+    customer: {
+        type: Schema.Types.ObjectId,
+        ref: 'User', // Reference to the User model (customer who wrote the review)
+        required: true
+    },
+    petShop: {
+        type: Schema.Types.ObjectId,
+        ref: 'PetShop', // Reference to the PetShop model (the shop being reviewed)
+        required: true
+    },
+    product: {
+        type: Schema.Types.ObjectId,
+        ref: 'Product', // Reference to the Product model (the product being reviewed, if applicable)
+    },
+    service: {
+        type: Schema.Types.ObjectId,
+        ref: 'Service'
+    },
+    order: {
+        type: Schema.Types.ObjectId,
+        ref: 'Order', // Reference to the Order model (the order related to the review)
+        required: true
+    },
+   
+    comment: {
+        type: String,
+        required: true,
+        trim: true
+    },
 
   rating: {
     type: Number,
@@ -44,10 +48,10 @@ const reviewSchema = new Schema({
   },
 });
 
-// Middleware to update the `updatedAt` field before saving:
-reviewSchema.pre("save", function (next) {
-  this.updatedAt = Date.now();
-  next();
-});
+// // Middleware to update the `updatedAt` field before saving:
+// reviewSchema.pre('save', function (next) {
+//     this.updatedAt = Date.now();
+//     next();
+// });
 
 module.exports = mongoose.model("Review", reviewSchema);
