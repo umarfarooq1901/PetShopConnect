@@ -36,6 +36,47 @@ const UserSchema = new Schema({
     enum: ['pending', 'approved', 'rejected'],
     default: 'pending' // Pet shop accounts will be 'pending' initially
   },
+
+  productCart:[
+    {
+      productId: {type:Schema.Types.ObjectId, ref: 'Product'},
+      quantity: {
+        type: Number,
+        required: true,
+        min: 1,
+      },
+      weight:{
+        type:String,
+       
+      },
+      price: {
+        type: Number,
+        required: true,
+      },
+
+    },
+
+  
+  ],
+
+  serviceCart:[
+    {
+      
+        serviceId: {type:Schema.Types.ObjectId, ref: 'Service'},
+        price: {
+          type: Number,
+          required: true,
+        }
+      
+    }
+  ],
+
+  orderPlaced:[
+      {
+        type:Schema.Types.ObjectId,
+        ref: 'Order'
+      }
+  ],
   createdAt: {
     type: Date,
     default: Date.now

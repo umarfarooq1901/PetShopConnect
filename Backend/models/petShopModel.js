@@ -44,12 +44,13 @@ const petShopSchema = new Schema({
       ref: "Product",
     },
   ],
-  pets: [
+  orderReceived:[
     {
-      type: Schema.Types.ObjectId,
-      ref: "Pet", // Assuming "Pet" is another schema
-    },
-  ],
+      type:Schema.Types.ObjectId,
+      ref: 'Order'
+    }
+],
+ 
   createdAt: {
     type: Date,
     default: Date.now,
@@ -57,3 +58,12 @@ const petShopSchema = new Schema({
 });
 
 module.exports = mongoose.model("PetShop", petShopSchema);
+
+
+
+// pets: [
+//   {
+//     type: Schema.Types.ObjectId,
+//     ref: "Pet", // Assuming "Pet" is another schema
+//   },
+// ],
