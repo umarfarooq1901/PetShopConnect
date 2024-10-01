@@ -14,7 +14,7 @@ const orderSchema = new Schema({
   },
   products: [
     {
-      product: {
+      productId: {
         type: Schema.Types.ObjectId,
         ref: "Product", // Reference to the Product model
         required: true,
@@ -23,6 +23,9 @@ const orderSchema = new Schema({
         type: Number,
         required: true,
         min: 1,
+      },
+      weight:{
+        type:String,
       },
       price: {
         type: Number,
@@ -61,12 +64,7 @@ const orderSchema = new Schema({
     enum: ["pending", "processed", "shipped", "delivered", "cancelled"],
     default: "pending",
   },
-  shippingAddress: {
-    street: { type: String, required: true },
-    city: { type: String, required: true },
-    pinCode: { type: String, required: true },
-    country: { type: String, required: true },
-  },
+ 
   createdAt: {
     type: Date,
     default: Date.now,
@@ -77,10 +75,11 @@ const orderSchema = new Schema({
   },
 });
 
+
+
+module.exports = mongoose.model("Order", orderSchema);
 // orderSchema.pre("save", function (next) {
 //   //.pre-save indicates that this middelware should run before teh "save" opearton occurs.
 //   this.updatedAt = Date.now(); //this refers to the current order document that si about to be saved.
 //   next(); //next: This is a callback function that you must call when your middleware function is done.
 // });
-
-module.exports = mongoose.model("Order", orderSchema);

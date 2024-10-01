@@ -41,6 +41,18 @@ const serviceRoute = require ('./routes/petShop/services/serviceRoute')
 app.use('/petshop' , serviceRoute);
 
 
+
+// cart Route
+const cartRoute = require('./routes/user/cartRoute');
+app.use('/user', cartRoute)
+
+
+
+// order route
+const orderRoute = require('./routes/petShop/orders/orderRoute');
+app.use('/order', orderRoute);
+
+
 // (Listening on port)
 app.listen(port, ()=>{
     console.log('Server Connected Successfully!');
