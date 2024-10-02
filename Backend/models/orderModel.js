@@ -38,10 +38,6 @@ const orderSchema = new Schema({
         ref: "Service", // Reference to the service model
         required: true,
       },
-<<<<<<< HEAD
-
-=======
->>>>>>> 279ebeccfb0393b9bcd06b31ccfd5361f874ddf3
       price: {
         type: Number,
         required: true,

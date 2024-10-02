@@ -68,19 +68,18 @@ const addProductController = async (req, res) => {
     // }
 
     // we better use concurrency to upload the images on cloudinary (Concurrency means being able to manage multiple tasks at the same time)
-     // Upload images concurrently using Promise.all
-     const uploadPromise = productImages.map((file)=>{
-       return cloudinary.uploader.upload(file.path, {
-          folder: folderPath
-        })
-     });
+    // Upload images concurrently using Promise.all
+    const uploadPromise = productImages.map((file) => {
+      return cloudinary.uploader.upload(file.path, {
+        folder: folderPath,
+      });
+    });
 
-     const results = await Promise.all(uploadPromise);
+    const results = await Promise.all(uploadPromise);
 
-
-   // Store uploaded images URLs and public IDs
-   const uploadedImages = results.map(result => result.secure_url);
-   const imagePublicId = results.map(result => result.public_id);
+    // Store uploaded images URLs and public IDs
+    const uploadedImages = results.map((result) => result.secure_url);
+    const imagePublicId = results.map((result) => result.public_id);
 
     const newProduct = await Product.create({
       productName,
@@ -130,12 +129,12 @@ const deleteProductController = async (req, res) => {
     // for (const image of deleteProduct.imagePublicId) {
     //   await cloudinary.uploader.destroy(image);
     // }
-          // Delete associated images from Cloudinary concurrently
-          const deleteImagePromise = deleteProduct.imagePublicId.map((imageId)=>{
-            return cloudinary.uploader.destroy(imageId);
-          });
+    // Delete associated images from Cloudinary concurrently
+    const deleteImagePromise = deleteProduct.imagePublicId.map((imageId) => {
+      return cloudinary.uploader.destroy(imageId);
+    });
 
-          await Promise.all(deleteImagePromise);
+    await Promise.all(deleteImagePromise);
 
     // Remove the product from the pet shop's product list
     const index = checkPetShop.products.findIndex(
@@ -185,7 +184,8 @@ const updateProductController = async (req, res) => {
       {
         // fallback logic Use the new name if it exists, otherwise, use the current name.
         productName: productName || findProduct.productName,
-        productDescription: productDescription || findProduct.productDescription,
+        productDescription:
+          productDescription || findProduct.productDescription,
         productPrice: productPrice || findProduct.productPrice,
         productQuantity: productQuantity || findProduct.productQuantity,
         category: category || findProduct.category,
