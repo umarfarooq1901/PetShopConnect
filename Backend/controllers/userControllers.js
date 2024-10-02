@@ -8,7 +8,6 @@ config({ path: "./.env" });
 const userSignupController = async (req, res) => {
   try {
     const { username, email, password, contact, address, role } = req.body;
-    console.log(req.body);
 
     // Input validation: ensure all fields are present
     if (!username || !email || !password || !contact || !address) {
@@ -182,11 +181,7 @@ const userEditController = async (req, res) => {
   }
 };
 
-module.exports = {
-  userSignupController,
-  userLoginController,
-  userDeleteController,
-};
+
 
 module.exports = {
   userSignupController,

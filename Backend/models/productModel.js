@@ -18,6 +18,9 @@ const productSchema = new Schema({
     type: Number,
     required: true,
   },
+  productWeight:{
+      type: String
+  },
   category: {
     type: String, // Example: 'Food', 'Accessories', 'Grooming', etc.
     required: true,
@@ -40,6 +43,14 @@ const productSchema = new Schema({
   imagePublicId:[
     {
     type: String,
+  }
+],
+
+reviews : [
+  {
+      user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+      review : {type : String},
+      star : {type : Number}
   }
 ],
   createdAt: {
