@@ -21,6 +21,7 @@ const addProductController = async (req, res) => {
       productDescription,
       productPrice,
       productQuantity,
+      productWeight,
       category,
       subCategory,
     } = req.body;
@@ -86,6 +87,7 @@ const addProductController = async (req, res) => {
       productDescription,
       productPrice,
       productQuantity,
+      productWeight,
       category,
       subCategory,
       images: uploadedImages, // Add all uploaded image URLs
