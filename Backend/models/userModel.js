@@ -2,9 +2,9 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-  username: { 
-    type: String, 
-    required: true 
+  username: {
+    type: String,
+    required: true,
   },
   email: {
     type: String,
@@ -17,70 +17,66 @@ const UserSchema = new Schema({
   },
   role: {
     type: String,
-    enum: ['customer', 'petshop', 'admin'], 
-    default: 'customer'
+    enum: ["customer", "petshop", "admin"],
+    default: "customer",
   },
   contact: {
     type: String,
-    required: true
+    required: true,
   },
   address: {
     type: String,
   },
   petshop: {
     type: Schema.Types.ObjectId,
-    ref: 'PetShop', // Refers to the PetShop model
+    ref: "PetShop", // Refers to the PetShop model
   },
   verificationStatus: {
     type: String,
-    enum: ['pending', 'approved', 'rejected'],
-    default: 'pending' // Pet shop accounts will be 'pending' initially
+    enum: ["pending", "approved", "rejected"],
+    default: "pending", // Pet shop accounts will be 'pending' initially
   },
 
-  productCart:[
+  productCart: [
     {
-      productId: {type:Schema.Types.ObjectId, ref: 'Product'},
+      productId: { type: Schema.Types.ObjectId, ref: "Product" },
       quantity: {
         type: Number,
         required: true,
         min: 1,
       },
-      weight:{
-        type:String,
-       
+      weight: {
+        type: String,
       },
       price: {
         type: Number,
         required: true,
       },
-
     },
-
-  
   ],
 
-  serviceCart:[
+  serviceCart: [
     {
-      
-        serviceId: {type:Schema.Types.ObjectId, ref: 'Service'},
-        price: {
-          type: Number,
-          required: true,
-        }
-      
-    }
+      serviceId: { type: Schema.Types.ObjectId, ref: "Service" },
+      price: {
+        type: Number,
+        required: true,
+      },
+    },
   ],
 
-  orderPlaced:[
-      {
-        type:Schema.Types.ObjectId,
-        ref: 'Order'
-      }
+  cartValue : {type : Number },
+
+  orderPlaced: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Order",
+    },
   ],
   createdAt: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model("User", UserSchema);
