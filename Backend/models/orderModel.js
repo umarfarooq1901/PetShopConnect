@@ -18,14 +18,14 @@ const orderSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "Product", // Reference to the Product model
         required: true,
-      },
+      },  
       quantity: {
         type: Number,
         required: true,
         min: 1,
       },
-      weight:{
-        type:String,
+      weight: {
+        type: String,
       },
       price: {
         type: Number,
@@ -38,8 +38,13 @@ const orderSchema = new Schema({
     {
       service: {
         type: Schema.Types.ObjectId,
-        ref: "Service", // Reference to the service model
-        required: true,
+        ref: "Service", // Reference to the Service model
+        required: false, // This is optional since a user might only order a product
+      },
+      serviceType: {
+        type: String,
+        enum: ["home", "visit"], // Define service type as home or visit
+        required: false,
       },
       price: {
         type: Number,
@@ -64,7 +69,7 @@ const orderSchema = new Schema({
     enum: ["pending", "processed", "shipped", "delivered", "cancelled"],
     default: "pending",
   },
- 
+
   createdAt: {
     type: Date,
     default: Date.now,
