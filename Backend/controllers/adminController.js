@@ -110,8 +110,8 @@ const rejectPetShop = async(req,res)=>{
 const getAllProducts = async(req, res)=>{
     try {
         const products = await Product.find().populate('petShop', 'shopName'); // Populating pet shop details
-        if(!products){
-            return res.status(404).json({message: 'No products found!'})
+        if (products.length === 0) {
+            return res.status(404).json({ message: 'No products found!' });
         }
         return res.status(200).json({message: 'products fetched successfully', products})
     } catch (error) {
@@ -125,8 +125,8 @@ const getAllProducts = async(req, res)=>{
     try {
         const {productId} = req.params;
         const product = await Product.findByIdAndDelete(productId);
-        if (products.length === 0) {
-            return res.status(404).json({ message: 'No products found!' });
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found!' });
         }
         res.status(200).json({ message: "Product deleted successfully", product});
         
