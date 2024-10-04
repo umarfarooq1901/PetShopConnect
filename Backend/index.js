@@ -34,7 +34,6 @@ app.use('/user',userRoute);
 
 
 // petshop routes
-// const petShopRoute = require('./routes/petShop/petShopRoute');
 const petShopRoute = require('./routes/petShop/petShopRoute');
 app.use('/petshop', petShopRoute);
 
