@@ -98,6 +98,11 @@ const petShopLoginController = async(req,res)=>{
         if(!petshop){
             return res.status(404).json({message: 'Petshop not found for this user!'})
         }
+
+              // Check if the pet shop is verified
+              if (!petshop.isVerified) {
+                return res.status(403).json({ message: 'Your pet shop account is not verified. Please contact support.' });
+            }
         
         // verify petshop
         const isPasswordValid = await bcrypt.compare(password, user.password);

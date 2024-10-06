@@ -12,7 +12,7 @@ const addToCart = async (req, res) => {
 
         const user = await User.findById(_id); // Find the user
         if (!user) {
-            return res.status(404).json({ message: 'Kindly register!' });
+            return res.status(404).json({ message: 'Kindly login!' });
         }
 
         let updated = false; // Flag to check if something was updated
@@ -97,7 +97,7 @@ const removeFromCart = async (req, res) => {
 
         const user = await User.findById(_id); // Find the user
         if (!user) {
-            return res.status(404).json({ message: 'Kindly register!' });
+            return res.status(404).json({ message: 'Kindly login!' });
         }
 
         // Flag to check if an item was removed
