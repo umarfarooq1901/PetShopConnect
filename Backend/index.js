@@ -21,6 +21,12 @@ app.use(cookieParser());
 
 app.get('/', ((req, res)=>{res.send('Hello from the PetShop Server!')}));
 
+
+
+// admin Routes
+const adminRoutes = require('./routes/admin/adminRoutes');
+app.use('/admin', adminRoutes);
+
 // User Routes
 const userRoute = require('./routes/user/userRoute');
 app.use('/user',userRoute);
@@ -28,16 +34,15 @@ app.use('/user',userRoute);
 
 
 // petshop routes
-// const petShopRoute = require('./routes/petShop/petShopRoute');
 const petShopRoute = require('./routes/petShop/petShopRoute');
 app.use('/petshop', petShopRoute);
 
 // products route
-const productRoute = require('./routes/petShop/products/productRoute')
+const productRoute = require('./routes/petShop/products/productRoute');
 app.use('/petshop', productRoute);
 
 //service route
-const serviceRoute = require ('./routes/petShop/services/serviceRoute')
+const serviceRoute = require ('./routes/petShop/services/serviceRoute');
 app.use('/petshop' , serviceRoute);
 
 
