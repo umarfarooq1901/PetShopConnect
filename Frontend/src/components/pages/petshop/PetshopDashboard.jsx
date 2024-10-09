@@ -1,7 +1,27 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Sidebar from '../../sharedComponents/Sidebar';
+import axiosInstance from '../../../utils/axiosInstance';
 
 const PetshopDashboard = () => {
+    // const [productCount, setProductCount] = useState(0);
+
+    const fetchProductCount = async()=>{
+            try {
+             
+                const response = await axiosInstance.get('/petshop/getAllProducts');
+                console.log(response.data);
+
+                
+            } catch (error) {
+                console.log('Error while fetching the data', error)
+            }
+
+       
+    }
+
+    useEffect(()=>{
+        fetchProductCount()
+    }, [])
   return (
     <div className="flex">
       <Sidebar />
