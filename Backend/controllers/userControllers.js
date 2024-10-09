@@ -28,6 +28,12 @@ const userSignupController = async (req, res) => {
         .status(403)
         .json({ message: "Admin registration not allowed! " });
     }
+        // Validate password strength (optional)
+        // if (password.length < 6) {
+        //   return res
+        //     .status(400)
+        //     .json({ message: "Password must be at least 6 characters long!" });
+        // }
 
     // Hash the password
     const hashPass = await bcrypt.hash(password, 10);
@@ -60,7 +66,7 @@ const userSignupController = async (req, res) => {
 const userLoginController = async (req, res) => {
   try {
     const secretKey = process.env.SECRET_KEY;
-    const { email, password, role } = req.body; // Accept role during login
+    const { email, password } = req.body; // Accept role during login
     if (!email || !password) {
       return res.status(400).json({ message: "All Data Fields Required!" });
     }
@@ -71,17 +77,17 @@ const userLoginController = async (req, res) => {
     }
     // Check if the user is trying to log in with the correct role
     // Ensure the user has the correct role (customer, petShop, or admin)
-    if (role && existingUser.role !== role) {
-      return res.status(403).json({
-        message: `Unauthorized: ${role} login is not allowed for this account!`,
-      });
-    }
+    // if (role && existingUser.role !== role) {
+    //   return res.status(403).json({
+    //     message: `Unauthorized: ${role} login is not allowed for this account!`,
+    //   });
+    // }
     const comparePass = await bcrypt.compare(password, existingUser.password);
     if (!comparePass) {
       return res.status(401).json({ message: "Password Incorrect!" });
     }
     // Generate JWT token with expiration
-    const createToken = jwt.sign({ _id: existingUser._id }, secretKey);
+    const createToken = jwt.sign({ _id: existingUser._id, role: existingUser.role }, secretKey,   { expiresIn: "7d" } ); // Token expires in 7 days 
     if (!createToken) {
       return res.status(400).json({ message: "Login Token Not Created!" });
     }
@@ -97,7 +103,7 @@ const userLoginController = async (req, res) => {
 
     return res
       .status(200)
-      .json({ message: "Logged in Successfully!", createToken });
+      .json({ message: "Login Successfully!", userId: existingUser._id, role: existingUser.role, createToken });
   } catch (error) {
     console.log("Error while logging in:", error);
     return res.status(500).json({ message: "Internal Server Error!" });

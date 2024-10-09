@@ -220,13 +220,17 @@ const getAllProducts = async (req, res) => {
       return res.status(404).json({ message: "Petshop Not Found!" });
     }
     const products = await Product.find({ petShop: petshopId });
-    if (findPetshop.products === 0) {
-      return res.status(404).json({ message: "No Products available!" });
-    }
+
+      // Calculate the product count
+      const productCount = products.length;
+      if(productCount === 0){
+        return res.status(404).json({ message: "No Products available!"})
+      }
+
 
     return res
       .status(200)
-      .json({ message: "Products fetched successfully!", products });
+      .json({ message: "Products fetched successfully!", productCount, products });
   } catch (error) {
     console.log("Error while fetching the products", error);
     return res.status(500).json({ message: "Internal server error!" });
