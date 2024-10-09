@@ -126,13 +126,15 @@ const getAllServicesController = async (req, res) => {
     // Find all services for the pet shop
     const services = await Service.find({ petShop: petshopId });
 
-    if (services.length === 0) {
+      const serviceCount = services.length;
+      
+    if (serviceCount === 0) {
       return res.status(404).json({ message: "No services found! " });
     }
 
     return res
       .status(200)
-      .json({ message: "Services retrieved Successfully!", services });
+      .json({ message: "Services retrieved Successfully!", serviceCount, services });
   } catch (error) {
     console.error("Error getting services:", error);
     return res.status(500).json({ message: "Internal Server Error!" });

@@ -1,6 +1,7 @@
 const express = require('express');
 const cookieParser = require('cookie-parser')
 const connectDb = require('./config/db')
+const cors = require('cors')
 const {config} = require('dotenv');
 config({path: './.env'});
 
@@ -15,6 +16,12 @@ connectDb();
 const app = express();
 
 // Middleware to handle JSON, cookieParser (if needed)
+const corsOptions = {
+    origin: 'http://localhost:5173', // Your frontend origin
+    credentials: true,               // Allow credentials (cookies)
+  };
+  
+  app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 

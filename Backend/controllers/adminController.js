@@ -47,6 +47,18 @@ const getPendingPetShops = async(req,res)=>{
     }
 }
 
+const getAllpetshops = async(req,res)=>{
+    try {
+        const petshops = await PetShop.find();
+        if(!petshops){
+            return res.status(404).json({message: 'There are no petshops available'})
+        }
+        res.status(200).json({petshops});
+    } catch (error) {
+        res.status(500).json({message: 'Internal server error', error});
+    }
+}
+
 // admin rejects a  petshop
 
 const rejectPetShop = async(req,res)=>{
@@ -58,14 +70,15 @@ const rejectPetShop = async(req,res)=>{
               return res.status(404).json({message: 'petshop not found!'})
           }
 
-          // Remove the pet shop from the database
-                await PetShop.findByIdAndDelete(petshopId);
-
+          petshop.isVerified = false;
+          await petshop.save();
+  
+      
                 // update the user's verification status
                 await User.findByIdAndUpdate(petshop.ownerId,{
                     verificationStatus: 'rejected',
                 });
-                res.status(200).json({ message: "Pet shop rejected and removed successfully" });
+                res.status(200).json({ message: "Pet shop rejected successfully" });
     } catch (error) {
         res.status(500).json({message: 'Internal server error', error});
     }
@@ -181,7 +194,7 @@ const getAllProducts = async(req, res)=>{
         }
     }
 
-module.exports = {verifyPetShop, getPendingPetShops, rejectPetShop, getAllUsers, deleteUser, getAllProducts, deleteProduct, getAllServices, deleteService, getAllOrders}
+module.exports = {verifyPetShop, getPendingPetShops, getAllpetshops, rejectPetShop, getAllUsers, deleteUser, getAllProducts, deleteProduct, getAllServices, deleteService, getAllOrders}
 
 
 
