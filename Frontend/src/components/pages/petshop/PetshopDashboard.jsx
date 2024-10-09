@@ -1,7 +1,33 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Sidebar from '../../sharedComponents/Sidebar';
+import axiosInstance from '../../../utils/axiosInstance';
+import Petshopauth from '../../../Authorization/Petshopauth';
 
 const PetshopDashboard = () => {
+    const petshopAuth = Petshopauth();
+    const [productCount, setProductCount] = useState(0);
+
+    const fetchProductCount = async()=>{
+            try {
+             
+                const response = await axiosInstance.get('/petshop/getAllProducts');
+                console.log(response.data);
+                // setProductCount(response)
+
+                
+            } catch (error) {
+                console.log('Error while fetching the data', error)
+            }
+
+       
+    }
+
+    useEffect(()=>{
+         // Call the authorization function when the component mounts
+        petshopAuth();
+           // After authorization, fetch the product count
+        fetchProductCount();
+    }, [])
   return (
     <div className="flex">
       <Sidebar />
