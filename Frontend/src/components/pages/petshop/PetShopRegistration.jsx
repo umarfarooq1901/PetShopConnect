@@ -49,15 +49,16 @@ const PetShopRegistration = () => {
     };
 
     return (
-        <div className='PetShopRegistration'>
-            <h1>Register Pet Shop</h1>
-            <form onSubmit={handleRegister}>
+        <div className='flex flex-col items-center justify-center h-screen bg-gray-100 p-4'>
+            <h1 className='text-2xl font-bold mb-6'>Register Pet Shop</h1>
+            <form onSubmit={handleRegister} className='bg-white shadow-md rounded-lg p-8 w-full max-w-sm'>
                 <input
                     type='text'
                     placeholder='Shop Name'
                     value={shopName}
                     onChange={(e) => setShopName(e.target.value)}
                     required
+                    className='block w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-green-200'
                 />
                 <input
                     type='text'
@@ -65,6 +66,7 @@ const PetShopRegistration = () => {
                     value={contact}
                     onChange={(e) => setContact(e.target.value)}
                     required
+                    className='block w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-green-200'
                 />
                 <input
                     type='text'
@@ -72,6 +74,7 @@ const PetShopRegistration = () => {
                     value={shopAddress}
                     onChange={(e) => setShopAddress(e.target.value)}
                     required
+                    className='block w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-green-200'
                 />
                 <input
                     type='text'
@@ -80,6 +83,7 @@ const PetShopRegistration = () => {
                     value={bankDetails.ifscCode}
                     onChange={handleBankDetailsChange}
                     required
+                    className='block w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-green-200'
                 />
                 <input
                     type='text'
@@ -88,6 +92,7 @@ const PetShopRegistration = () => {
                     value={bankDetails.accountNumber}
                     onChange={handleBankDetailsChange}
                     required
+                    className='block w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-green-200'
                 />
                 <input
                     type='text'
@@ -96,14 +101,18 @@ const PetShopRegistration = () => {
                     value={bankDetails.bankName}
                     onChange={handleBankDetailsChange}
                     required
+                    className='block w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-green-200'
                 />
                 <input
                     type='file'
                     accept='image/*'
                     onChange={handleFileChange}
                     required
+                    className='block w-full mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-green-200'
                 />
-                <button type='submit'>Register</button>
+                <button type='submit' className='w-full bg-green-600 text-white p-3 rounded-md hover:bg-green-700 transition duration-300'>
+                    Register
+                </button>
             </form>
         </div>
     );

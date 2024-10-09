@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../../../utils/axiosInstance";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 const AdminDashboard = () => {
   const [allPetshops, setAllPetshops] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [actionOccurred, setActionOccurred] = useState(false); // Track action
+  const navigate = useNavigate();
 
   // get all petshops
   useEffect(() => {
@@ -58,9 +61,20 @@ const AdminDashboard = () => {
     getAllPetshops();
   };
 
+  const handleLogout = () => {
+    Cookies.remove('authToken', { path: '/' }); // Remove token with path
+    Cookies.remove('userId', { path: '/' }); // Remove userId with path
+
+    setTimeout(()=>{
+        navigate('/user/login')
+    }, 3000)
+    // window.location.href = '/user/login'; // Redirect to login page
+  };
+
   return (
     <div className="dashboard-main border">
       <h1 className="text-xl font-bold mb-4">Admin Dashboard</h1>
+
 
       <button
         onClick={handleRefresh}
@@ -68,6 +82,9 @@ const AdminDashboard = () => {
       >
         Refresh Pet Shops
       </button>
+      <div className="logout-main">
+        <button className="bg-emerald-700 text-white px-4 rounded py-2 hover:bg-emerald-600 " onClick={handleLogout}>Logout</button>
+      </div>
 
       {loading && <p>Loading pet shops...</p>}
       {error && <p className="text-red-500">{error}</p>}

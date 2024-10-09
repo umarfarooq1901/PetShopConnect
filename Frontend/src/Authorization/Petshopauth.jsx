@@ -16,7 +16,7 @@ const Petshopauth = ()=>{
             } catch (error) {
                 if (error.response && error.response.status === 401) {
                     console.error("Unauthorized access, redirecting to login...");
-                    navigate('/login'); // Redirect to login page if not authorized
+                    navigate('/user/login'); // Redirect to login page if not authorized
                 } else {
                     console.error("Error during authorization:", error);
                 }

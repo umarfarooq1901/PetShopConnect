@@ -1,32 +1,51 @@
 import React, { useState } from 'react';
 import axiosInstance from '../../../utils/axiosInstance'; // Adjust the path according to your project structure
 import Cookies from 'js-cookie'; // Import js-cookie to manage cookies
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [role, setRole] = useState(''); // Optional: Add role selection
+    const [message, setMessage] = useState('');
+    const [isSuccess, setIsSuccess] = useState(null);
+    const navigate = useNavigate();
 
     const fetchLogin = async () => {
         try {
-            const response = await axiosInstance.post('/user/login', { email, password, role });
+            const response = await axiosInstance.post('/user/login', { email, password });
             console.log(response.data.message);
 
-            // Assuming the response contains the userId, set the cookie here
-            Cookies.set('userId', response.data.userId, { expires: 7 }); // Store userId in cookie for 7 days
-            console.log('User ID set in cookie:', response.data.userId);
+            // Check if login is successful
+            if (response.data.message === "Login Successfully!") {
+                setMessage("Login Successfully!");
+                setIsSuccess(true);
 
-            // You can redirect the user or perform additional actions here
-        } catch (error) {
-            if (error.response) {
-                console.log('Error response data:', error.response.data);
-                console.log('Error response status:', error.response.status);
-                // Display an appropriate message to the user
-                alert(error.response.data.message || 'An error occurred. Please try again.');
-            } else if (error.request) {
-                console.log('Error request:', error.request);
+                // Set the userId and authToken in cookies
+                Cookies.set('userId', response.data.userId, { expires: 7 }); // Store userId in cookie for 7 days
+                Cookies.set('authToken', response.data.authToken, { expires: 7 }); // Store authToken in cookie for 7 days
+                // console.log('User ID and Auth Token set in cookies:', response.data.userId, response.data.authToken);
+
+                // Role-based navigation
+                if (response.data.role === 'admin') {
+                    navigate('/admin/dashboard'); // Navigate to admin dashboard
+                } else if (response.data.role === 'petshop') {
+                    navigate('/petshop/dashboard'); // Navigate to pet shop dashboard
+                } else if (response.data.role === 'customer') {
+                    navigate('/'); // Navigate to home page
+                }
             } else {
-                console.log('Error message:', error.message);
+                // Handle other messages from the server
+                setMessage(response.data.message);
+                setIsSuccess(false);
+            }
+        } catch (error) {
+            setIsSuccess(false);
+            if (error.response) {
+                setMessage(error.response.data.message || 'An error occurred. Please try again.');
+            } else if (error.request) {
+                setMessage('No response from the server. Please try again.');
+            } else {
+                setMessage('An error occurred. Please try again.');
             }
         }
     };
@@ -37,31 +56,35 @@ const Login = () => {
     };
 
     return (
-        <div className='login'>
-            <h1 className='text-bold text-center'>Login</h1>
-            <form className='w-4/5'>
-                <input 
-                    type="text" 
-                    placeholder='email' 
-                    value={email} 
-                    onChange={(e) => setEmail(e.target.value)} 
-                />
-                <input 
-                    type="password" 
-                    placeholder='password' 
-                    value={password} 
-                    onChange={(e) => setPassword(e.target.value)} 
-                />
-                <select value={role} onChange={(e) => setRole(e.target.value)}>
-                    <option value="">Select Role</option>
-                    <option value="customer">Customer</option>
-                    <option value="petShop">Pet Shop</option>
-                    <option value="admin">Admin</option>
-                </select>
-                <button type="submit" className="bg-lime-600 text-white p-3" onClick={handleClick}>
-                    Login
-                </button>
-            </form>
+        <div className='flex items-center justify-center h-screen bg-gray-100 p-4'>
+            <div className='bg-white shadow-lg rounded-lg p-8 w-full max-w-sm'>
+                <h1 className='text-2xl font-bold text-center mb-6'>Login</h1>
+                <form className='space-y-4' onSubmit={handleClick}>
+                    <input 
+                        type="text" 
+                        placeholder='Email' 
+                        value={email} 
+                        onChange={(e) => setEmail(e.target.value)} 
+                        required
+                        className='block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-green-200'
+                    />
+                    <input 
+                        type="password" 
+                        placeholder='Password' 
+                        value={password} 
+                        onChange={(e) => setPassword(e.target.value)} 
+                        required
+                        className='block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-green-200'
+                    />
+                    <button type="submit" className="w-full bg-green-600 text-white p-3 rounded-md hover:bg-green-700 transition duration-300">
+                        Login
+                    </button>
+                </form>
+
+                {message && (
+                    <p className={`mt-3 p-4 font-bold text-white rounded-md ${isSuccess ? 'bg-green-600' : 'bg-red-600'}`}>{message}</p>
+                )}
+            </div>
         </div>
     );
 };
