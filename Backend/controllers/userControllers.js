@@ -95,11 +95,22 @@ const userLoginController = async (req, res) => {
     //  return res.status(200).json({message: 'Logged in Successfully!', token: createToken});
 
     // Set the token in an HTTP-only cookie, The token is stored in a cookie instead of being returned in the response body.
-    res.cookie("authToken", createToken, {
-      httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-      sameSite: "Strict", // Helps protect against CSRF attacks
-    });
+
+      // Set the token in a cookie based on the user's role
+      if (existingUser.role === 'petshop') {
+        res.cookie("petshopToken", createToken, {
+          httpOnly: true,
+          maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+          sameSite: "Strict",
+        });
+      } else {
+        res.cookie("authToken", createToken, {
+          httpOnly: true,
+          maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+          sameSite: "Strict",
+        });
+      }
+
 
     return res
       .status(200)

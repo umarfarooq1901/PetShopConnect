@@ -61,13 +61,18 @@ const AdminDashboard = () => {
     getAllPetshops();
   };
 
-  const handleLogout = () => {
-    Cookies.remove('authToken', { path: '/' }); // Remove token with path
-    Cookies.remove('userId', { path: '/' }); // Remove userId with path
+  const handleLogout = async () => {
+    const logOutRes = await axiosInstance.get('user/logout');
 
-    setTimeout(()=>{
+    if(logOutRes.data.message === 'Logout Successfully!'){
+
         navigate('/user/login')
-    }, 3000)
+    }
+
+
+
+  
+ 
     // window.location.href = '/user/login'; // Redirect to login page
   };
 
