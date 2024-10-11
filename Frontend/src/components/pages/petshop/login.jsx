@@ -20,20 +20,21 @@ const Login = () => {
                 setMessage("Login Successfully!");
                 setIsSuccess(true);
 
-                // Set the userId and authToken in cookies
-                Cookies.set('userId', response.data.userId, { expires: 7 }); // Store userId in cookie for 7 days
-                Cookies.set('authToken', response.data.authToken, { expires: 7 }); // Store authToken in cookie for 7 days
-                // console.log('User ID and Auth Token set in cookies:', response.data.userId, response.data.authToken);
-
-                // Role-based navigation
-                if (response.data.role === 'admin') {
-                    navigate('/admin/dashboard'); // Navigate to admin dashboard
-                } else if (response.data.role === 'petshop') {
-                    navigate('/petshop/dashboard'); // Navigate to pet shop dashboard
-                } else if (response.data.role === 'customer') {
-                    navigate('/'); // Navigate to home page
+                // Store the token based on the role
+                if (response.data.role === 'petshop') {
+                    Cookies.set('petshopToken', response.data.createToken, { expires: 7 });
+                    navigate('/petshop/dashboard');
+                } else {
+                    Cookies.set('authToken', response.data.createToken, { expires: 7 });
+                    if (response.data.role === 'admin') {
+                        navigate('/admin/dashboard');
+                    } else {
+                        navigate('/');
+                    }
                 }
-            } else {
+
+            }
+             else {
                 // Handle other messages from the server
                 setMessage(response.data.message);
                 setIsSuccess(false);
