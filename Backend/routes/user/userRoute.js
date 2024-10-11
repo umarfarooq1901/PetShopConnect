@@ -12,6 +12,21 @@ router.delete('/delete', userAuthentication, userDeleteController);
 router.put('/update', userAuthentication, userEditController);
 
 
+// user logut
+router.get('/logout', (req, res)=>{
+    try {
+        const {authToken} = req.cookies;
+        if(authToken){
+            res.clearCookie('authToken');
+            res.status(200).json({message: 'Logout Successfully!'})
+        }
+    } catch (error) {
+        console.log(error);
+        
+    }
+})
+
+
 
 
 
