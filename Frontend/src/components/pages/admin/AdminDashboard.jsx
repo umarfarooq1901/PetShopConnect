@@ -1,28 +1,29 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../../../utils/axiosInstance";
-import Cookies from "js-cookie";
+import useAdminAuth from "../../../Authorization/useAdminAuth";
 import { useNavigate } from "react-router-dom";
 
 const AdminDashboard = () => {
+  const isAuthorized = useAdminAuth();  // Get the authorization status
   const [allPetshops, setAllPetshops] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [actionOccurred, setActionOccurred] = useState(false); // Track action
+  const [actionOccurred, setActionOccurred] = useState(false);  // Track action
   const navigate = useNavigate();
 
-  // get all petshops
   useEffect(() => {
-    getAllPetshops();
-  }, [actionOccurred]); // Re-fetch pet shops when action occurs
+    if (isAuthorized === true) {  // Only fetch pet shops if authorized
+      getAllPetshops();
+    }
+  }, [isAuthorized, actionOccurred]);  // Re-fetch when action occurs
 
   const getAllPetshops = async () => {
     setLoading(true);
     try {
       const res = await axiosInstance.get("/admin/getAllpetshops");
-      console.log(res.data); // Log the full response for debugging
-      setAllPetshops(res.data.petshops || []); // Use an empty array as a fallback
+      setAllPetshops(res.data.petshops || []);  // Use fallback to avoid null
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setError("Error fetching pet shop details");
     } finally {
       setLoading(false);
@@ -31,64 +32,60 @@ const AdminDashboard = () => {
 
   const acceptVerification = async (petshopId) => {
     try {
-      const res = await axiosInstance.put(`admin/verify-petshop/${petshopId}`);
-      console.log(res.data);
-      setActionOccurred((prev) => !prev); // Toggle actionOccurred to trigger re-fetch
+      await axiosInstance.put(`admin/verify-petshop/${petshopId}`);
+      setActionOccurred((prev) => !prev);  // Toggle actionOccurred to trigger re-fetch
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
   const rejectVerification = async (petshopId) => {
     try {
-      const res = await axiosInstance.delete(`admin/reject-petshop/${petshopId}`);
-      console.log(res.data);
-      setActionOccurred((prev) => !prev); // Toggle actionOccurred to trigger re-fetch
+      await axiosInstance.delete(`admin/reject-petshop/${petshopId}`);
+      setActionOccurred((prev) => !prev);  // Toggle actionOccurred to trigger re-fetch
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
-  };
-
-  const handleAccept = (petshopId) => {
-    acceptVerification(petshopId);
-  };
-
-  const handleReject = (petshopId) => {
-    rejectVerification(petshopId);
-  };
-
-  const handleRefresh = () => {
-    getAllPetshops();
   };
 
   const handleLogout = async () => {
-    const logOutRes = await axiosInstance.get('user/logout');
-
-    if(logOutRes.data.message === 'Logout Successfully!'){
-
-        navigate('/user/login')
+    try {
+      const logOutRes = await axiosInstance.get('user/logout');
+      if (logOutRes.data.message === 'Logout Successfully!') {
+        navigate('/user/login');  // Redirect to login page after logout
+      }
+    } catch (error) {
+      console.error("Logout failed:", error);
     }
-
-
-
-  
- 
-    // window.location.href = '/user/login'; // Redirect to login page
   };
+
+  // While checking for authorization, display a loading screen or message
+  if (isAuthorized === null) {
+    return <div>Loading...</div>;  // Show loading while authorization is being checked
+  }
+
+  // If not authorized, nothing will render since they are redirected in the hook
+  if (isAuthorized === false) {
+    return null;  // Don't render anything if unauthorized
+  }
 
   return (
     <div className="dashboard-main border">
       <h1 className="text-xl font-bold mb-4">Admin Dashboard</h1>
 
-
       <button
-        onClick={handleRefresh}
+        onClick={getAllPetshops}
         className="bg-blue-500 text-white py-2 px-4 rounded mb-4"
       >
         Refresh Pet Shops
       </button>
       <div className="logout-main">
-        <button className="bg-emerald-700 text-white px-4 rounded py-2 hover:bg-emerald-600 " onClick={handleLogout}>Logout</button>
+        <button
+          className="bg-emerald-700 text-white px-4 rounded py-2 hover:bg-emerald-600"
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
       </div>
 
       {loading && <p>Loading pet shops...</p>}
@@ -125,13 +122,13 @@ const AdminDashboard = () => {
                   <td className="py-2 px-4 border-b">
                     <button
                       className="bg-green-500 text-white py-1 px-2 rounded mr-2"
-                      onClick={() => handleAccept(petshop._id)}
+                      onClick={() => acceptVerification(petshop._id)}
                     >
                       Accept
                     </button>
                     <button
                       className="bg-red-500 text-white py-1 px-2 rounded"
-                      onClick={() => handleReject(petshop._id)}
+                      onClick={() => rejectVerification(petshop._id)}
                     >
                       Reject
                     </button>

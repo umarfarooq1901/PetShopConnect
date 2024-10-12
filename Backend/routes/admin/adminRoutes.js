@@ -5,6 +5,11 @@ const adminAuth = require('../../middlewares/Authentication/adminAuth');
 const adminController = require('../../controllers/adminController');
 
 
+// authorization route
+router.get('/authorize', userAuthentication, adminAuth, (req, res)=>{
+      // If userAuthentication and adminAuth pass, return success response
+    res.status(200).json({message: 'Authorized as Admin!', admin: req.user})
+})
 
 
 // verify a petshop

@@ -1,4 +1,5 @@
 const User = require("../models/userModel");
+const PetShop = require("../models/petShopModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { config } = require("dotenv");
@@ -65,61 +66,79 @@ const userSignupController = async (req, res) => {
 
 const userLoginController = async (req, res) => {
   try {
-    const secretKey = process.env.SECRET_KEY;
-    const { email, password } = req.body; // Accept role during login
-    if (!email || !password) {
-      return res.status(400).json({ message: "All Data Fields Required!" });
-    }
-
-    const existingUser = await User.findOne({ email });
-    if (!existingUser) {
-      return res.status(401).json({ message: "User Not Registered yet!" });
-    }
-    // Check if the user is trying to log in with the correct role
-    // Ensure the user has the correct role (customer, petShop, or admin)
-    // if (role && existingUser.role !== role) {
-    //   return res.status(403).json({
-    //     message: `Unauthorized: ${role} login is not allowed for this account!`,
-    //   });
-    // }
-    const comparePass = await bcrypt.compare(password, existingUser.password);
-    if (!comparePass) {
-      return res.status(401).json({ message: "Password Incorrect!" });
-    }
-    // Generate JWT token with expiration
-    const createToken = jwt.sign({ _id: existingUser._id, role: existingUser.role }, secretKey,   { expiresIn: "7d" } ); // Token expires in 7 days 
-    if (!createToken) {
-      return res.status(400).json({ message: "Login Token Not Created!" });
-    }
-
-    //  return res.status(200).json({message: 'Logged in Successfully!', token: createToken});
-
-    // Set the token in an HTTP-only cookie, The token is stored in a cookie instead of being returned in the response body.
-
-      // Set the token in a cookie based on the user's role
-      if (existingUser.role === 'petshop') {
-        res.cookie("petshopToken", createToken, {
-          httpOnly: true,
-          maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-          sameSite: "Strict",
-        });
-      } else {
-        res.cookie("authToken", createToken, {
-          httpOnly: true,
-          maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-          sameSite: "Strict",
-        });
+      const secretKey = process.env.SECRET_KEY;
+      const { email, password } = req.body; // Accept role during login
+      if (!email || !password) {
+          return res.status(400).json({ message: "All Data Fields Required!" });
       }
 
+      const existingUser = await User.findOne({ email });
+      if (!existingUser) {
+          return res.status(401).json({ message: "User Not Registered yet!" });
+      }
 
-    return res
-      .status(200)
-      .json({ message: "Login Successfully!", userId: existingUser._id, role: existingUser.role, createToken });
+      // Check if the user has a registered petshop only for petshop role
+      let petshopId = null;  // Initialize petshopId variable
+      if (existingUser.role === 'petshop') {
+          const petshop = await PetShop.findOne({ ownerId: existingUser._id });
+          if (!petshop) {
+              return res.status(404).json({ message: 'Petshop not found for this user!' });
+          }
+          if (!petshop.isVerified) {
+              return res.status(403).json({ message: 'Your pet shop account is not verified. Please contact support.' });
+          }
+          petshopId = petshop._id;  // Assign the pet shop ID from the found pet shop
+      }
+
+      const comparePass = await bcrypt.compare(password, existingUser.password);
+      if (!comparePass) {
+          return res.status(401).json({ message: "Password Incorrect!" });
+      }
+
+// Generate JWT token with expiration
+const Token = jwt.sign(
+  { 
+      _id: existingUser._id,  // This is the user ID
+      role: existingUser.role,
+      petshopId
+  },
+  secretKey,
+  { expiresIn: "7d" } // Token expires in 7 days 
+);
+
+
+      if (!Token) {
+          return res.status(400).json({ message: "Some Server Error, Please try again!" });
+      }
+
+      // Set the token in an HTTP-only cookie based on the user's role
+      if (existingUser.role === 'petshop') {
+          res.cookie("petshopToken", Token, {
+              httpOnly: true,
+              maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+              sameSite: "Strict",
+          });
+      } else {
+          res.cookie("authToken", Token, {
+              httpOnly: true,
+              maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+              sameSite: "Strict",
+          });
+      }
+
+      return res.status(200).json({ 
+          message: "Login Successfully!", 
+          userId: existingUser._id, 
+          role: existingUser.role, 
+          createToken: Token // Ensure you return the correct token here
+      });
   } catch (error) {
-    console.log("Error while logging in:", error);
-    return res.status(500).json({ message: "Internal Server Error!" });
+      console.log("Error while logging in:", error);
+      return res.status(500).json({ message: "Internal Server Error!" });
   }
 };
+
+
 
 // User Delete Controller
 

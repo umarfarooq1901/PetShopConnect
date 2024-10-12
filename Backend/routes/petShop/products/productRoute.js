@@ -9,7 +9,9 @@ const {addProductController, deleteProductController, updateProductController, g
 router.post('/addProduct', petShopAuth, multerProductUpload, addProductController);
 router.delete('/deleteProduct/:_id',petShopAuth, deleteProductController);
 router.put('/updateProduct/:_id',petShopAuth, updateProductController);
-router.get('/getAllProducts', petShopAuth,getAllProducts );
+router.get('/getAllProducts', petShopAuth, getAllProducts);
+
+
 router.get('/getSingleProduct/:_id', petShopAuth,getSingleProduct );
 
 module.exports = router;

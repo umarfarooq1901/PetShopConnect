@@ -5,6 +5,7 @@ import Login from "./components/pages/petshop/login";
 import PetShopRegistration from "./components/pages/petshop/PetShopRegistration";
 import AdminDashboard from "./components/pages/admin/AdminDashboard";
 import NoPage from "./components/sharedComponents/NoPage";
+import Products from "./components/pages/petshop/Products";
 
 
 function App() {
@@ -16,8 +17,9 @@ function App() {
             <Route path="/user/signup" element= {<Signup/>}/>
             <Route path="/user/login" element= {<Login/>}/>
             <Route path="/petshop/register" element= {<PetShopRegistration/>}/>
-              <Route path="/petshop/dashboard" element = {<PetshopDashboard/>}/>
-              <Route path="/admin/dashboard" element = {<AdminDashboard/>}/>
+            <Route path="/petshop/dashboard" element = {<PetshopDashboard/>}/>
+            <Route path="/petshop/products" element = {<Products/>}/>
+            <Route path="/admin/dashboard" element = {<AdminDashboard/>}/>
 
     
           </Routes>
