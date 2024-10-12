@@ -8,34 +8,34 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
     const [isSuccess, setIsSuccess] = useState(null);
+    const [isLoading, setIsLoading] = useState(false); // Loading state
     const navigate = useNavigate();
 
     const fetchLogin = async () => {
+        setIsLoading(true); // Set loading to true
         try {
             const response = await axiosInstance.post('/user/login', { email, password });
             console.log(response.data.message);
 
-            // Check if login is successful
             if (response.data.message === "Login Successfully!") {
                 setMessage("Login Successfully!");
                 setIsSuccess(true);
-
-                // Store the token based on the role
+                
+                Cookies.set('userId', response.data.userId, { expires: 7 });
+                const token = response.data.createToken;
+                
                 if (response.data.role === 'petshop') {
-                    Cookies.set('petshopToken', response.data.createToken, { expires: 7 });
+                    Cookies.set('petshopToken', token, { expires: 7 });
                     navigate('/petshop/dashboard');
                 } else {
-                    Cookies.set('authToken', response.data.createToken, { expires: 7 });
+                    Cookies.set('authToken', token, { expires: 7 });
                     if (response.data.role === 'admin') {
                         navigate('/admin/dashboard');
                     } else {
                         navigate('/');
                     }
                 }
-
-            }
-             else {
-                // Handle other messages from the server
+            } else {
                 setMessage(response.data.message);
                 setIsSuccess(false);
             }
@@ -48,6 +48,8 @@ const Login = () => {
             } else {
                 setMessage('An error occurred. Please try again.');
             }
+        } finally {
+            setIsLoading(false); // Set loading to false regardless of success or failure
         }
     };
 
@@ -77,8 +79,12 @@ const Login = () => {
                         required
                         className='block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-green-200'
                     />
-                    <button type="submit" className="w-full bg-green-600 text-white p-3 rounded-md hover:bg-green-700 transition duration-300">
-                        Login
+                    <button 
+                        type="submit" 
+                        className={`w-full bg-green-600 text-white p-3 rounded-md hover:bg-green-700 transition duration-300 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        disabled={isLoading} // Disable button when loading
+                    >
+                        {isLoading ? 'Logging in...' : 'Login'}
                     </button>
                 </form>
 
