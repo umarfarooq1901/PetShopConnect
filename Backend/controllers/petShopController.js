@@ -76,59 +76,60 @@ const petShopRegController = async(req, res)=>{
 
 // Login controller for PetShop owner
 
-const petShopLoginController = async(req,res)=>{
-    try {
-        const secretKey = process.env.SECRET_KEY;
-        const {email, password} = req.body; 
-        // validate inputs
+// const petShopLoginController = async(req,res)=>{
+    // try {
+    //     const secretKey = process.env.SECRET_KEY;
+    //     const {email, password} = req.body; 
+    //     // validate inputs
 
-        if(!email || !password){
-            return res.status(400).json({message:'Email and Password are required!'})
-        }
+    //     if(!email || !password){
+    //         return res.status(400).json({message:'Email and Password are required!'})
+    //     }
 
-        // check if the user exists in the user model
+    //     // check if the user exists in the user model
 
-        const user = await User.findOne({email});
-        if(!user){
-            return res.status(404).json({message: 'User Not Found!'});
-        }
+    //     const user = await User.findOne({email});
+    //     if(!user){
+    //         return res.status(404).json({message: 'User Not Found!'});
+    //     }
 
-        // check if the user has a registered petshop
-        const petshop = await PetShop.findOne({ownerId: user._id});
-        if(!petshop){
-            return res.status(404).json({message: 'Petshop not found for this user!'})
-        }
+    //     // check if the user has a registered petshop
+    //     const petshop = await PetShop.findOne({ownerId: user._id});
+    //     if(!petshop){
+    //         return res.status(404).json({message: 'Petshop not found for this user!'})
+    //     }
 
-              // Check if the pet shop is verified
-              if (!petshop.isVerified) {
-                return res.status(403).json({ message: 'Your pet shop account is not verified. Please contact support.' });
-            }
+    //           // Check if the pet shop is verified
+    //           if (!petshop.isVerified) {
+    //             return res.status(403).json({ message: 'Your pet shop account is not verified. Please contact support.' });
+    //         }
         
-        // verify petshop
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-        if(!isPasswordValid){
-            return res.status(401).json({message: 'Incorrect Password!'})
-        }
+    //     // verify petshop
+    //     const isPasswordValid = await bcrypt.compare(password, user.password);
+    //     if(!isPasswordValid){
+    //         return res.status(401).json({message: 'Incorrect Password!'})
+    //     }
 
-        // Generate JWT Token
-        const token = jwt.sign({id: user._id, petshopId: petshop._id}, secretKey);
-        if(!token){
-            return res.status(500).json({message: 'Some Server Error, Please try again!'})
-        }
+    //     // Generate JWT Token
+    //     const token = jwt.sign({id: user._id, petshopId: petshop._id}, secretKey);
+    //     if(!token){
+    //         return res.status(500).json({message: 'Some Server Error, Please try again!'})
+    //     }
 
-        // send the token in response
-        res.cookie('petshopToken', token,{
-            httpOnly: true,
-            maxAge: 7 * 24 * 60 * 60 * 1000,  //7 days
-            sameSite: 'Strict',  //helps perotect against csrf attacks
-        });
-        // Send a success response
-        return res.status(200).json({message: 'Login Successfully!', token});
-    } catch (error) {
-        console.error('Error logging in pet shop owner:', error);
-        res.status(500).json({ message: 'Internal Server Error!' });
-    }
-}
+    //     // send the token in response
+    //     res.cookie('petshopToken', token,{
+    //         httpOnly: true,
+    //         maxAge: 7 * 24 * 60 * 60 * 1000,  //7 days
+    //         sameSite: 'Strict',  //helps perotect against csrf attacks
+    //     });
+
+    //     // Send a success response
+    //     return res.status(200).json({message: 'Login Successfully!', token});
+    // } catch (error) {
+    //     console.error('Error logging in pet shop owner:', error);
+    //     res.status(500).json({ message: 'Internal Server Error!' });
+    // }
+// }
 
 
 
@@ -189,6 +190,6 @@ const petShopLoginController = async(req,res)=>{
         }
       }
 
-module.exports = {petShopRegController, petShopLoginController, petShopDeleteController, petShopUpdateController};
+module.exports = {petShopRegController, petShopDeleteController, petShopUpdateController};
 
 

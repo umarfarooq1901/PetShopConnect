@@ -2,18 +2,32 @@ const express = require('express');
 const router = express.Router();
 const {multerAadharUpload} = require('../../middlewares/multer/multer');
 const petShopAuth = require('../../middlewares/Authentication/petShopAuth');
-const {petShopRegController, petShopLoginController, petShopDeleteController, petShopUpdateController} = require('../../controllers/petShopController')
+const {petShopRegController, petShopDeleteController, petShopUpdateController} = require('../../controllers/petShopController')
 
 router.post('/register',multerAadharUpload, petShopRegController);
-router.post('/login', petShopLoginController);
+
 router.delete('/delete', petShopAuth, petShopDeleteController);
 router.put('/updateDetails', petShopAuth, petShopUpdateController);
 // New Authorization Route
 router.get('/authorize', petShopAuth, (req, res) => {
     // If the middleware has successfully verified the token,
     // it will reach this point.
-    res.status(200).json({ message: 'Authorized', petshop: req.petshop });
+    res.status(200).json({ message: 'Authorized petshop', petshop: req.petshop });
 });
+
+// logout route
+router.get('/logout', (req, res)=>{
+    try {
+        const {petshopToken} = req.cookies;
+        if(petshopToken){
+            res.clearCookie('petshopToken');
+            res.status(200).json({message: 'Logout Successfully!'})
+        }
+    } catch (error) {
+        console.log(error);
+        
+    }
+})
 
 
 module.exports = router

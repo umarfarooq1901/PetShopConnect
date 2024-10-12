@@ -45,12 +45,13 @@ const petShopRoute = require('./routes/petShop/petShopRoute');
 app.use('/petshop', petShopRoute);
 
 // products route
-const productRoute = require('./routes/petShop/products/productRoute');
-app.use('/petshop', productRoute);
+const productRoute = require('./routes/petShop/products/productRoute')
+app.use('/petshop/products', productRoute);  // Use '/petshop/products'
 
-//service route
-const serviceRoute = require ('./routes/petShop/services/serviceRoute');
-app.use('/petshop' , serviceRoute);
+// service route
+const serviceRoute = require('./routes/petShop/services/serviceRoute');
+app.use('/petshop/services', serviceRoute);  // Use '/petshop/services'
+
 
 
 

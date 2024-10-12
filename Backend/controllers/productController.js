@@ -14,8 +14,11 @@ cloudinary.config({
 // Add product controller
 const addProductController = async (req, res) => {
   try {
-    const { petshopId } = req.petshop;
 
+    const { petShopId } = req.petshop;
+    
+console.log('Request Body:', req.body); // Log request body
+    console.log('Request Files:', req.files); // Log uploaded files
     const {
       productName,
       productDescription,
@@ -40,7 +43,7 @@ const addProductController = async (req, res) => {
       return res.status(400).json({ message: "All fields are required!" });
     }
 
-    const checkPetShop = await PetShop.findById(petshopId);
+    const checkPetShop = await PetShop.findById(petShopId);
     if (!checkPetShop) {
       return res
         .status(404)
@@ -93,7 +96,7 @@ const addProductController = async (req, res) => {
       subCategory,
       images: uploadedImages, // Add all uploaded image URLs
       imagePublicId: imagePublicId,
-      petShop: petshopId, // Associate the product with the pet shop
+      petShop: petShopId, // Associate the product with the pet shop
     });
 
     checkPetShop.products.push(newProduct._id);
@@ -112,10 +115,10 @@ const addProductController = async (req, res) => {
 
 const deleteProductController = async (req, res) => {
   try {
-    const { petshopId } = req.petshop;
+    const { petShopId } = req.petshop;
     const { _id } = req.params;
 
-    const checkPetShop = await PetShop.findById(petshopId);
+    const checkPetShop = await PetShop.findById(petShopId);
     if (!checkPetShop) {
       return res
         .status(404)
@@ -161,7 +164,7 @@ const deleteProductController = async (req, res) => {
 
 const updateProductController = async (req, res) => {
   try {
-    const { petshopId } = req.petshop;
+    const { petShopId } = req.petshop;
     const { _id } = req.params;
     const {
       productName,
@@ -172,7 +175,7 @@ const updateProductController = async (req, res) => {
       subCategory,
     } = req.body;
 
-    const checkPetShop = await PetShop.findById(petshopId);
+    const checkPetShop = await PetShop.findById(petShopId);
     if (!checkPetShop) {
       return res.status(404).json({ message: "Petshop not found!" });
     }
@@ -214,23 +217,24 @@ const updateProductController = async (req, res) => {
 // get all products
 const getAllProducts = async (req, res) => {
   try {
-    const { petshopId } = req.petshop;
-    const findPetshop = await PetShop.findById(petshopId);
+    const  {petShopId}  = req.petshop;
+    const findPetshop = await PetShop.findById(petShopId);
     if (!findPetshop) {
       return res.status(404).json({ message: "Petshop Not Found!" });
     }
-    const products = await Product.find({ petShop: petshopId });
+    const products = await Product.find({ petshopId : petShopId});
+    console.log("this is products", products);
 
       // Calculate the product count
-      const productCount = products.length;
-      if(productCount === 0){
-        return res.status(404).json({ message: "No Products available!"})
+      const countProducts = products.length
+      if (countProducts === 0) {
+        return res.status(200).json({ message: 'No products available!', countProducts});
       }
 
 
     return res
       .status(200)
-      .json({ message: "Products fetched successfully!", productCount, products });
+      .json({ message: "Products fetched successfully!",countProducts, products });
   } catch (error) {
     console.log("Error while fetching the products", error);
     return res.status(500).json({ message: "Internal server error!" });

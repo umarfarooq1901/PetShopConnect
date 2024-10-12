@@ -5,7 +5,7 @@ config({ path: './.env' });
 const petShopAuth = async (req, res, next) => {
     try {
         const { petshopToken } = req.cookies;
-        
+
         if (!petshopToken) {
             return res.status(401).json({ message: 'Unauthorized Access!' });
         }
@@ -13,13 +13,19 @@ const petShopAuth = async (req, res, next) => {
         const secretKey = process.env.SECRET_KEY;
 
         // Verify the token
-        
         jwt.verify(petshopToken, secretKey, (error, decoded) => {
             if (error) {
                 return res.status(403).json({ message: 'Access Denied' });
             }
 
-            req.petshop = decoded;  // Store the decoded token (user and petshop details)
+          
+
+            req.petshop = {
+                petShopId: decoded.petshopId || null, // Assign petShopId from token
+                userId: decoded._id // Use the userId directly
+            };
+           
+            // console.log('This is req.petshop', req.petshop);
             next();
         });
 
@@ -28,6 +34,7 @@ const petShopAuth = async (req, res, next) => {
         res.status(500).json({ message: 'Internal Server Error!' });
     }
 }
+
 
 module.exports = petShopAuth;
 
