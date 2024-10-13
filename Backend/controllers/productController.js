@@ -222,8 +222,9 @@ const getAllProducts = async (req, res) => {
     if (!findPetshop) {
       return res.status(404).json({ message: "Petshop Not Found!" });
     }
-    const products = await Product.find({ petshopId : petShopId});
-    console.log("this is products", products);
+    const products = await Product.find({ petShop :petShopId });
+    // console.log("petShopId", petShopId);
+    // console.log("this is products", products);
 
       // Calculate the product count
       const countProducts = products.length
