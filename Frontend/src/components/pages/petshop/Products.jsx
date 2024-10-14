@@ -49,9 +49,9 @@ const Products = () => {
         }
     };
 
-    if (isAuthorized === null) {
-        return <div>Loading ...</div>;
-      }
+    // if (isAuthorized === null) {
+    //     return <div>Loading ...</div>;
+    //   }
     
       if (isAuthorized === false) {
         return null; // Don't render anything if unauthorized
@@ -61,7 +61,7 @@ const Products = () => {
         
  
     <div className='flex'>
-    {loading && <p>Loading the products...</p>}
+    {/* {loading && <p>Loading the products...</p>} */}
     <Sidebar />
     <div className="flex-1 p-6 ">
         <h1 className="text-2xl font-bold mb-4 text-center">Products</h1>
