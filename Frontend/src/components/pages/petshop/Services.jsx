@@ -3,6 +3,7 @@ import axiosInstance from '../../../utils/axiosInstance';
 import usePetshopAuth from '../../../Authorization/usePetshopAuth';
 import Sidebar from '../../sharedComponents/Sidebar';
 import ServiceTable from './ServiceTable';
+import AddServiceModal from './AddServiceModal';
 
 const Services = () => {
   const isAuthorized = usePetshopAuth();
@@ -29,16 +30,29 @@ const Services = () => {
     }
   };
 
+  const handleAddService = async(serviceData) => {
+    try {
+        const response = await axiosInstance.post('/petshop/services/addService', serviceData);
+        const newService = response.data.service;  // Ensure the response structure is correct
+        
+        // Make sure the service is added correctly
+        setServices((prevServices) => [...prevServices, newService]);
+    } catch (error) {
+        console.log('Error while adding the service', error.response.data);
+    }
+};
+
+
   // if (isAuthorized === null) {
   //   return <div>Loading ...</div>;
   // }
 
-  if (isAuthorized === false) {
+  if (isAuthorized === false) {     
     return null; // Don't render anything if unauthorized
   }
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen">
+    <div className="flex lg:flex-row min-h-screen">
       <Sidebar />
 
       <div className="flex-1 p-6 lg:ml-64"> {/* Ensuring main content is pushed when sidebar is open */}
@@ -57,6 +71,12 @@ const Services = () => {
           <ServiceTable services={services} />
         </div>
       </div>
+      <AddServiceModal
+        isOpen={isModalOpen}
+        onClose={()=>setIsModalOpen(false)}
+        onSubmit={handleAddService}
+      
+      />
     </div>
   );
 };

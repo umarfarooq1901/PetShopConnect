@@ -22,8 +22,8 @@ const PetshopDashboard = () => {
                 axiosInstance.get('/petshop/products/getAllProducts'),
                 axiosInstance.get('/petshop/services/getallservices')
             ]);
-              console.log(productResponse.data)
-              console.log(serviceResponse.data)
+              // console.log(productResponse.data)
+              // console.log(serviceResponse.data)
             // Set product count
             setProductCount(productResponse.data.countProducts || 0);
             
@@ -36,9 +36,9 @@ const PetshopDashboard = () => {
         }
     };
 
-    if (isAuthorized === null) {
-        return <div>Loading ...</div>;
-    }
+    // if (isAuthorized === null) {
+    //     return <div>Loading ...</div>;
+    // }
 
     if (isAuthorized === false) {
         return null; // Don't render anything if unauthorized
