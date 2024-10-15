@@ -3,7 +3,7 @@ const Service = require("../models/serviceModel");
 
 const addServiceController = async (req, res) => {
   try {
-    const { petshopId } = req.petshop;
+    const { petShopId } = req.petshop;
 
     const { serviceName, description, price, serviceType } = req.body;
 
@@ -13,7 +13,7 @@ const addServiceController = async (req, res) => {
     }
 
     // Check if pet shop exists
-    const petShop = await PetShop.findById(petshopId);
+    const petShop = await PetShop.findById(petShopId);
     if (!petShop) {
       return res.status(404).json({ message: "Pet shop not found!" });
     }
@@ -24,7 +24,7 @@ const addServiceController = async (req, res) => {
       description,
       price,
       serviceType,
-      petShop: petshopId,
+      petShop: petShopId,
     });
 
     petShop.services.push(newService._id);
@@ -43,9 +43,9 @@ const addServiceController = async (req, res) => {
 const deleteServiceController = async (req, res) => {
   try {
     const { serviceId } = req.params;
-    const { petshopId } = req.petshop;
+    const { petShopId } = req.petshop;
 
-    const findPetShop = await PetShop.findById(petshopId);
+    const findPetShop = await PetShop.findById(petShopId);
     if(!findPetShop){
       return res.status(404).json({message: 'Petshop not registered with us!'})
     }
@@ -59,7 +59,7 @@ const deleteServiceController = async (req, res) => {
     }
 
     // Remove the service from the pet shop's services array
-    // await PetShop.findByIdAndUpdate(petshopId, {
+    // await PetShop.findByIdAndUpdate(petShopId, {
     //   $pull: { services: serviceId },
     // });
 
@@ -80,10 +80,10 @@ const deleteServiceController = async (req, res) => {
 const updateServiceController = async (req, res) => {
   try {
     const { serviceId } = req.params;
-    const { petshopId } = req.petshop;
+    const { petShopId } = req.petshop;
     const { serviceName, description, price, serviceType } = req.body;
 
-    if (!petshopId) {
+    if (!petShopId) {
       return res
         .status(404)
         .json({ message: "Unauthorized to update this service!" });
@@ -121,15 +121,18 @@ const updateServiceController = async (req, res) => {
 
 const getAllServicesController = async (req, res) => {
   try {
-    const { petshopId } = req.petshop;
-
+    const { petShopId } = req.petshop;
+    const findPetshop = await PetShop.findById(petShopId);
+    if (!findPetshop) {
+      return res.status(404).json({ message: "Petshop Not Found!" });
+    }
     // Find all services for the pet shop
-    const services = await Service.find({ petShop: petshopId });
+    const services = await Service.find({ petShop :petShopId });
 
-      const serviceCount = services.length;
+      const serviceCount = services.length
       
     if (serviceCount === 0) {
-      return res.status(404).json({ message: "No services found! " });
+      return res.status(200).json({ message: "No services found!"});
     }
 
     return res
@@ -144,11 +147,11 @@ const getAllServicesController = async (req, res) => {
 
 const getSingleServiceController = async (req, res) => {
   try {
-    const { petshopId } = req.petshop; // Extract petshopId from middleware
+    const { petShopId } = req.petshop; // Extract petShopId from middleware
     const { serviceId } = req.params; // Correctly extract serviceId from req.params
 
     // Find the PetShop by ID
-    const findPetshop = await PetShop.findById(petshopId);
+    const findPetshop = await PetShop.findById(petShopId);
     if (!findPetshop) {
       return res.status(404).json({ message: 'Petshop not registered yet!' });
     }
