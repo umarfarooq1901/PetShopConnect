@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import axiosInstance from '../../../utils/axiosInstance';
 import usePetshopAuth from '../../../Authorization/usePetshopAuth';
 import Sidebar from '../../sharedComponents/Sidebar';
-import Card from '../../sharedComponents/ProductCard';
-import ProductTable from '../../sharedComponents/ProductTable';
+import Card from './ProductCard';
+import ProductTable from './ProductTable';
 import AddProductModal from './AddProductModal';
 
 const Products = () => {
@@ -44,10 +44,29 @@ const Products = () => {
             });
             console.log('Product added successfully:', res.data);
             setProducts((prevProducts) => [...prevProducts, res.data.product]); // Update the state with the new product
+            setIsModalOpen(false);
         } catch (error) {
             console.log('Error while adding the product', error.response.data);
         }
     };
+
+    // delete the product
+    const handleDelete = async (productId)=>{
+        try {
+          const deleteProduct = await axiosInstance.delete(`/petshop/products/deleteProduct/${productId}`);
+          if(deleteProduct.data.message ===  "Product deleted successfully!"){
+
+              setProducts((prevProducts)=> prevProducts.filter(product => product._id !== productId));
+          }
+          else{
+            console.error("Failed to delete the product:", deleteProduct.data.message);
+          }
+          
+          
+        } catch (error) {
+          console.log(error)
+        }
+      }
 
     // if (isAuthorized === null) {
     //     return <div>Loading ...</div>;
@@ -73,7 +92,7 @@ const Products = () => {
         </button>
 
         <div className="list-products my-5">
-            <ProductTable products={products} />
+            <ProductTable products={products} handleDelete = {handleDelete} />
         </div>
     </div>
     <AddProductModal
