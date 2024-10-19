@@ -30,7 +30,7 @@ const addServiceController = async (req, res) => {
     petShop.services.push(newService._id);
     await petShop.save();
 
-    return res.status(201).json({ message: "Service added successfully!" });
+    return res.status(201).json({ message: "Service added successfully!", services: newService });
   } catch (error) {
     console.log("Error while adding service:", error);
     return res
