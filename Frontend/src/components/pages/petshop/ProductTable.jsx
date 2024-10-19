@@ -1,17 +1,12 @@
 import React from 'react';
-import axiosInstance from '../../../utils/axiosInstance';
 
-const ProductTable = ({ products, handleDelete }) => {
+
+const ProductTable = ({ products, handleDelete, handleEditProduct }) => {
   if (!products || products.length === 0) {
     return <p className="text-center text-gray-500">No products available.</p>;
   }
-
-
-  // deleting the row (product and its corrosponding image in cloudinary and database)
-
  
 
-   
 
   return (
     <div className="overflow-x-auto shadow-lg sm:rounded-lg">
@@ -39,7 +34,7 @@ const ProductTable = ({ products, handleDelete }) => {
               <td className="px-4 py-2 text-sm text-gray-700">{product.productWeight}</td>
               <td className="px-4 py-2 text-sm text-gray-700">{product.category}</td>
               <td className="px-4 py-2 text-sm text-gray-700">{product.subCategory}</td>
-              <td className="px-4 py-2 text-sm"><button className='bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-500'>Edit</button></td>
+              <td className="px-4 py-2 text-sm"><button className='bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-500' onClick={()=>handleEditProduct(product)}>Edit</button></td>
               <td className="px-4 py-2 text-sm"><button className='bg-red-500 text-white px-4 py-2 rounded hover:bg-red-400' onClick={()=>handleDelete(product._id)}>Delete</button></td>
             </tr>
           ))}

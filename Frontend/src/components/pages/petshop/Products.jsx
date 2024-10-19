@@ -5,12 +5,15 @@ import Sidebar from '../../sharedComponents/Sidebar';
 import Card from './ProductCard';
 import ProductTable from './ProductTable';
 import AddProductModal from './AddProductModal';
+import EditProductModal from './EditProductModal';
 
 const Products = () => {
     const isAuthorized = usePetshopAuth();
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
+    const [isEditModal, setEditModal] = useState(false);
+    const [editProduct, setEditProduct] = useState(null);
 
 
         useEffect(()=>{
@@ -42,7 +45,7 @@ const Products = () => {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            console.log('Product added successfully:', res.data);
+         
             setProducts((prevProducts) => [...prevProducts, res.data.product]); // Update the state with the new product
             setIsModalOpen(false);
         } catch (error) {
@@ -68,9 +71,34 @@ const Products = () => {
         }
       }
 
+    //   edit the product 
+
+    const handleEditProduct = async (productData)=>{
+        try {
+            const res = await axiosInstance.put(`/petshop/products/updateProduct/${editProduct._id}`, productData);
+            
+            // Update the products state with the new product data
+            setProducts((prevProducts)=>prevProducts.map(product=>product._id === editProduct._id ? res.data.updateProduct : product));
+            setEditModal(false);
+            setEditProduct(null); // Reset current product
+
+        } catch (error) {
+            console.log('Error while editing the product', error);
+        }
+    }
+
+    const openEditModal = (product) =>{
+        setEditProduct(product);
+        setEditModal(true);
+    }
+
     // if (isAuthorized === null) {
     //     return <div>Loading ...</div>;
     //   }
+
+    // if (loading) {
+    //     return <div>Loading products...</div>; // Display a loading message
+    // }
     
       if (isAuthorized === false) {
         return null; // Don't render anything if unauthorized
@@ -92,13 +120,20 @@ const Products = () => {
         </button>
 
         <div className="list-products my-5">
-            <ProductTable products={products} handleDelete = {handleDelete} />
+            <ProductTable products={products} handleDelete = {handleDelete} handleEditProduct = {openEditModal} />
         </div>
     </div>
     <AddProductModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)} // Close the modal
         onSubmit={handleAddProduct} // Pass the add product function
+    />
+
+    <EditProductModal
+            isOpen = {isEditModal}
+            onClose = {()=> setEditModal(false)}
+            product = {editProduct}
+            onSubmit = {handleEditProduct}
     />
 </div>
     

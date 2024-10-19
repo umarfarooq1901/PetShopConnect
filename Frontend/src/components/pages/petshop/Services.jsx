@@ -4,12 +4,15 @@ import usePetshopAuth from '../../../Authorization/usePetshopAuth';
 import Sidebar from '../../sharedComponents/Sidebar';
 import ServiceTable from './ServiceTable';
 import AddServiceModal from './AddServiceModal';
+import EditServiceModal from './EditServiceModal';
 
 const Services = () => {
   const isAuthorized = usePetshopAuth();
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
+  const [editService, setEditService] = useState(null);
+  const [editModalOpen, setEditModalOpen] = useState(false);
 
   useEffect(() => {
     if (isAuthorized === true) {
@@ -33,7 +36,7 @@ const Services = () => {
     setLoading(true); // Set loading state while adding the service
     try {
       const response = await axiosInstance.post('/petshop/services/addService', serviceData);
-      const newService = response.data.service; // Ensure the response structure is correct
+      const newService = response.data.services; // Ensure the response structure is correct
 
       // Add the new service to the existing state
       setServices((prevServices) => [...prevServices, newService]);
@@ -58,6 +61,25 @@ const Services = () => {
     }
   };
 
+
+  const handleEditService = async(serviceData)=>{
+
+    try {
+      const response = await axiosInstance.put(`/petshop/services/updateService/${editService._id}`, serviceData);
+      setServices((prevServices)=>prevServices.map(service=> service._id === editService._id ? response.data.updateService : service));
+      setEditModalOpen(false);
+      setEditService(null); // Reset current product
+      
+    } catch (error) {
+      console.log('Error while editing the service', error);
+    }
+  }
+
+  const openEditModal = (service)=>{
+    setEditService(service);
+    setEditModalOpen(true);
+  }
+
   // if (isAuthorized === null) {
   //   return <div>Loading ...</div>;
   // }
@@ -70,7 +92,7 @@ const Services = () => {
     <div className="flex lg:flex-row min-h-screen">
       <Sidebar />
       <div className="flex-1 p-6"> {/* Ensuring main content is pushed when sidebar is open */}
-        {loading && <p>Loading the services...</p>}
+        {/* {loading && <p>Loading the services...</p>} */}
         <h1 className="text-2xl font-bold mb-4 text-center">Services</h1>
         
         <button
@@ -81,13 +103,20 @@ const Services = () => {
         </button>
 
         <div className="list-services">
-          <ServiceTable services={services} handleDeleteService={handleDeleteService} />
+          <ServiceTable services={services} handleDeleteService={handleDeleteService} handleEditService = {openEditModal} />
         </div>
       </div>
       <AddServiceModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleAddService}
+      />
+
+      <EditServiceModal
+          isOpen = {editModalOpen}
+          onClose = {()=>setEditModalOpen(false)}
+          service = {editService}
+          onSubmit = {handleEditService}
       />
     </div>
   );
