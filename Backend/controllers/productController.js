@@ -17,8 +17,6 @@ const addProductController = async (req, res) => {
 
     const { petShopId } = req.petshop;
     
-console.log('Request Body:', req.body); // Log request body
-    console.log('Request Files:', req.files); // Log uploaded files
     const {
       productName,
       productDescription,

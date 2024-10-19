@@ -46,7 +46,7 @@ const PetshopDashboard = () => {
 
     return (
         <div className="flex">
-            {loading && <p>Loading the data...</p>}
+            {/* {loading && <p>Loading the data...</p>} */}
             <Sidebar />
             <div className="flex-1 p-6">
                 <h1 className="text-2xl font-bold mb-4">Petshop Dashboard</h1>
