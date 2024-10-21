@@ -108,9 +108,9 @@ const Products = () => {
         
  
     <div className='flex'>
-    {/* {loading && <p>Loading the products...</p>} */}
     <Sidebar />
     <div className="flex-1 p-6 ">
+    {/* {loading && <p>Loading the products...</p>} */}
         <h1 className="text-2xl font-bold mb-4 text-center">Products</h1>
         <button
             className='bg-teal-600 text-white rounded px-3 py-2 hover:bg-teal-400 cursor-pointer'

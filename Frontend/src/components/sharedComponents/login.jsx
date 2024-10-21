@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axiosInstance from '../../../utils/axiosInstance'; // Adjust the path according to your project structure
+import axiosInstance from '../../utils/axiosInstance'; // Adjust the path according to your project structure
 import Cookies from 'js-cookie'; // Import js-cookie to manage cookies
 import { useNavigate } from 'react-router-dom';
 

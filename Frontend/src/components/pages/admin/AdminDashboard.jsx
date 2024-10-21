@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import axiosInstance from "../../../utils/axiosInstance";
 import useAdminAuth from "../../../Authorization/useAdminAuth";
 import { useNavigate } from "react-router-dom";
+import AdminSideBar from "./AdminSideBar";
+
+
+
 
 const AdminDashboard = () => {
   const isAuthorized = useAdminAuth();  // Get the authorization status
@@ -48,16 +52,7 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleLogout = async () => {
-    try {
-      const logOutRes = await axiosInstance.get('user/logout');
-      if (logOutRes.data.message === 'Logout Successfully!') {
-        navigate('/user/login');  // Redirect to login page after logout
-      }
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-  };
+
 
   // While checking for authorization, display a loading screen or message
   if (isAuthorized === null) {
@@ -70,8 +65,12 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="dashboard-main border">
-      <h1 className="text-xl font-bold mb-4">Admin Dashboard</h1>
+    <div className="flex">
+    <AdminSideBar/>
+    <div className="flex-1 p-8 ml-64 mt-20">    {/* md:ml-72 */}
+ 
+  
+      <h1 className="text-xl font-bold mb-4 text-center">Admin Dashboard</h1>
 
       <button
         onClick={getAllPetshops}
@@ -80,12 +79,7 @@ const AdminDashboard = () => {
         Refresh Pet Shops
       </button>
       <div className="logout-main">
-        <button
-          className="bg-emerald-700 text-white px-4 rounded py-2 hover:bg-emerald-600"
-          onClick={handleLogout}
-        >
-          Logout
-        </button>
+    
       </div>
 
       {loading && <p>Loading pet shops...</p>}
@@ -144,6 +138,7 @@ const AdminDashboard = () => {
             )}
           </tbody>
         </table>
+      </div>
       </div>
     </div>
   );
